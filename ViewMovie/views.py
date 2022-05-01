@@ -4,4 +4,8 @@ from django.http import HttpResponse
 
 
 def home_page(request):
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'navbar': 'home'})
+
+
+def add_movie(request):
+    return render(request, 'addmovie.html', {'navbar': 'addmovie'})
