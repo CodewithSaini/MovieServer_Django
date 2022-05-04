@@ -3,6 +3,7 @@ from .import views
 
 
 urlpatterns = [
-    path('home/', views.home_page, name="home"),
-    path('addmovie/', views.add_movie, name="addmovie")
+    path('', views.home_page, name="home"),
+    path('addmovie/', views.add_movie, name="addmovie"),
+    path('movies', views.movies, name="movies")
 ]

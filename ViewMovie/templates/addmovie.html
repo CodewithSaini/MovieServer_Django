@@ -8,51 +8,79 @@
     
     <div  class="container">
         <h1>Add Movie</h1>
-        <form class="row g-3 xs 6">
+        <br>
+        <form class="row g-3 xs 6" method="POST">
+            {% csrf_token %}
             <div class="col-md-6">
-              <label for="inputEmail4" class="form-label">Title</label>
-              <input type="email" class="form-control" id="inputEmail4">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" class="form-control"  name="title">
             </div>
             <div class="col-md-3">
-              <label for="inputPassword4" class="form-label">Date Released</label>
-              <input type="date" class="form-control" id="inputPassword4">
+              <label for="released" class="form-label">Date Released</label>
+              <input type="date" class="form-control" name="released">
             </div>
             <div class="col-3">
-              <label for="inputAddress" class="form-label">Rated</label>
-              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                <label for="rated" class="form-label">Rated</label>
+                <select name="rated" class="form-select">
+                  <option selected>G</option>
+                  <option>R</option>
+                  <option>PG</option>
+                  <option>PG-13</option>
+                  <option>NC-17</option>
+                </select>
             </div>
-            <div class="col-12">
-              <label for="inputAddress2" class="form-label">Runtime</label>
-              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+            <div class="col-3">
+              <label for="Runtime" class="form-label">Runtime</label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="runtime" >
+                <span class="input-group-text" id="basic-addon1">Min</span>
+              </div>
+              
             </div>
-            <div class="col-md-6">
-              <label for="inputCity" class="form-label">Plot</label>
-              <input type="text" class="form-control" id="inputCity">
+            <div class="col-md-9">
+              <label for="plot" class="form-label">Plot</label>
+              <input type="text" class="form-control" name="plot">
             </div>
             <div class="col-md-4">
-              <label for="inputState" class="form-label">Genre</label>
-              <select id="inputState" class="form-select">
-                <option selected>Choose...</option>
-                <option>...</option>
+              <label for="genre" class="form-label">Genre</label>
+              <select name="genre" class="form-select">
+                <option multiple >Action</option>
+                <option>Horror</option>
+                <option>Drama</option>
+                <option>Science Fiction</option>
+                <option>Documentary</option>
+                <option>Comedy</option>
               </select>
             </div>
-            <div class="col-md-2">
-              <label for="inputZip" class="form-label">Zip</label>
-              <input type="text" class="form-control" id="inputZip">
+            <div class="col-md-8">
+              <label for="actors" class="form-label">Actors</label>
+              <input type="text" class="form-control" name="actors">
             </div>
-            <div class="col-12">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck">
-                <label class="form-check-label" for="gridCheck">
-                  Check me out
-                </label>
+            <div class="col-md-6">
+                <label for="directors" class="form-label">Directors</label>
+                <input type="text" class="form-control" name="directors">
               </div>
-            </div>
+              <div class="col-md-6">
+                <label for="writers" class="form-label">Writers</label>
+                <input type="text" class="form-control" name="writers">
+              </div>
+              <div class="col-md-3">
+                <label for="awards" class="form-label">Awards</label>
+                <input type="text" class="form-control" name="awards">
+              </div>
+              <div class="col-md-9">
+                <label for="poster" class="form-label">Poster</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">URL</span>
+                    <input type="text" class="form-control" name="poster">
+                </div>
+              </div>
             <div class="col-12">
-              <button type="submit" class="btn btn-primary">Sign in</button>
+              <button type="submit" id="addmovie" class="btn btn-primary">Submit</button>
             </div>
           </form>
-        
+          <hr>
+        <p>Seperate multiple actors, directors and writers by comma.</p>
     </div>
 
 {% endblock content %}
