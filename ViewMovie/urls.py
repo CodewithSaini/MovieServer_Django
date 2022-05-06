@@ -5,5 +5,6 @@ from .import views
 urlpatterns = [
     path('', views.home_page, name="home"),
     path('addmovie/', views.add_movie, name="addmovie"),
-    path('movies', views.movies, name="movies")
+    path('movies/', views.movies, name="movies"),
+    path('login/', views.log_in, name="login")
 ]

@@ -16,6 +16,10 @@ def movies(request):
     return render(request, 'movies.html', {'movies': content})
 
 
+def log_in(request):
+    return render(request, 'login.html', {'navbar': 'login'})
+
+
 def add_movie(request):
     if request.method == 'POST':
         posted_movie = request.POST.dict()
