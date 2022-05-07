@@ -1,32 +1,50 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% block title %}
+<title>Movies (A-Z)</title>
+{% endblock title %} {% block content %}
 
 <div class="container">
   <h1>Movies</h1>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap">
     {% for movie in movies %}
-    <div class="card" style="width: 18rem; margin: 10px">
-      <img
-        src="{{ movie.poster }}"
-        class="card-img-top"
-        style="width: 286px; height: 420px"
-      />
-      <div class="card-body">
-        <div style="display: flex; flex-direction: row">
-          <h6 class="card-title">{{ movie.title }}</h6>
-          <div
-            style="
-              width: 20px;
-              height: 20px;
-              margin-left: 10px;
-              border-radius: 50%;
-            "
-          ></div>
-        </div>
-        <p class="card-text">{{ movie.released}}</p>
-      </div>
+    <div class="card" style="width: 15rem; height: 20rem; margin: 7px">
+      <a href="{% url 'movies' movie.title %}"
+        ><img
+          src="{{ movie.poster }}"
+          class="card-img-top"
+          style="width: 238px; height: 318px"
+      /></a>
     </div>
     {% endfor %}
   </div>
+  <hr />
+  <div class="pagination" style="margin-bottom: 40px">
+    <div class="step-links">
+      {% if movies.has_previous %}
+      <div class="container">
+        <a href="?page=1"
+          ><button type="button" class="btn btn-dark">First</button></a
+        >
+        <a href="?page={{ movies.previous_page_number }}"
+          ><button type="button" class="btn btn-dark">Previous</button></a
+        >
+      </div>
+      {% endif %}
 
-  {% endblock %}
+      <div class="current">
+        <p>Page {{ movies.number }} of {{ movies.paginator.num_pages }}.</p>
+      </div>
+
+      {% if movies.has_next %}
+      <div class="container">
+        <a href="?page={{ movies.next_page_number }}"
+          ><button type="button" class="btn btn-dark">Next</button></a
+        >
+        <a href="?page={{ movies.paginator.num_pages }}"
+          ><button type="button" class="btn btn-dark">Last</button>
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
+{% endblock content %}

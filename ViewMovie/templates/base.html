@@ -64,12 +64,28 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
                     <a class="dropdown-item" href="{% url 'movies' %}"
-                      >Top 50</a
+                      >All Movies</a
                     >
                   </li>
-                  <li><a class="dropdown-item" href="#">Comming Soon</a></li>
                   <li>
-                    <a class="dropdown-item" href="#">Movies by genre</a>
+                    <a class="dropdown-item" href="{% url 'movies' %}"
+                      >Top 50 Movies</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'latestmovies' %}"
+                      >Latest Movies</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'commingsoon' %}"
+                      >Comming Soon</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bygenre' %}"
+                      >Movies by genre</a
+                    >
                   </li>
                 </ul>
               </li>
@@ -88,8 +104,7 @@
         </div>
       </div>
     </nav>
-
-    {% block content %} {% endblock content %}
+    <div class="container">{% block content %} {% endblock content %}</div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block title %}
+<title>Latest Movies</title>
+{% endblock title %} {% block content %}
+
+<div class="container">
+    <h1>Movies</h1>
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+      {% for movie in movies %}
+      <div class="card" style="width: 15rem; height:20rem; margin: 7px;">
+        <a href="{% url 'movies' movie.title %}"
+          ><img
+            src="{{ movie.poster }}"
+            class="card-img-top"
+            style="width: 238px; height: 318px"
+        /></a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
+

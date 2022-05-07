@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block title %}
+<title>{{movie.title}}</title>
+{% endblock title %} {% block content %}
+
+<div class="container" style="margin-top: 80px">
+  <h1>{{movie.title}}</h1>
+  <hr />
+  <img  src="{{movie.poster}}" style="width:350px; height:450px"></img>
+  <div style="float:right; width:800px; height:450px border:2px solid black">
+    <h6>{{movie.genre}}</h6>
+    <h5>{{movie.released}}</h5>
+    <p>{{movie.plot}}</p>
+  </div>
+  <hr>
+</div>
+
+{% endblock content %}

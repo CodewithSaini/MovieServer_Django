@@ -1,86 +1,84 @@
 {% extends 'base.html' %}
-
+<title>Add Movie</title>
 {% block title %}
-    <title>Add Movie</title>
-{% endblock title %}
+<title>Add Movie</title>
+{% endblock title %} {% block content %}
 
-{% block content %}
-    
-    <div  class="container">
-        <h1>Add Movie</h1>
-        <br>
-        <form class="row g-3 xs 6" method="POST">
-            {% csrf_token %}
-            <div class="col-md-6">
-              <label for="title" class="form-label">Title</label>
-              <input type="text" class="form-control"  name="title">
-            </div>
-            <div class="col-md-3">
-              <label for="released" class="form-label">Date Released</label>
-              <input type="date" class="form-control" name="released">
-            </div>
-            <div class="col-3">
-                <label for="rated" class="form-label">Rated</label>
-                <select name="rated" class="form-select">
-                  <option selected>G</option>
-                  <option>R</option>
-                  <option>PG</option>
-                  <option>PG-13</option>
-                  <option>NC-17</option>
-                </select>
-            </div>
-            <div class="col-3">
-              <label for="Runtime" class="form-label">Runtime</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="runtime" >
-                <span class="input-group-text" id="basic-addon1">Min</span>
-              </div>
-              
-            </div>
-            <div class="col-md-9">
-              <label for="plot" class="form-label">Plot</label>
-              <input type="text" class="form-control" name="plot">
-            </div>
-            <div class="col-md-4">
-              <label for="genre" class="form-label">Genre</label>
-              <select name="genre" class="form-select">
-                <option multiple >Action</option>
-                <option>Horror</option>
-                <option>Drama</option>
-                <option>Science Fiction</option>
-                <option>Documentary</option>
-                <option>Comedy</option>
-              </select>
-            </div>
-            <div class="col-md-8">
-              <label for="actors" class="form-label">Actors</label>
-              <input type="text" class="form-control" name="actors">
-            </div>
-            <div class="col-md-6">
-                <label for="directors" class="form-label">Directors</label>
-                <input type="text" class="form-control" name="directors">
-              </div>
-              <div class="col-md-6">
-                <label for="writers" class="form-label">Writers</label>
-                <input type="text" class="form-control" name="writers">
-              </div>
-              <div class="col-md-3">
-                <label for="awards" class="form-label">Awards</label>
-                <input type="text" class="form-control" name="awards">
-              </div>
-              <div class="col-md-9">
-                <label for="poster" class="form-label">Poster</label>
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">URL</span>
-                    <input type="text" class="form-control" name="poster">
-                </div>
-              </div>
-            <div class="col-12">
-              <button type="submit" id="addmovie" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
-          <hr>
-        <p>Seperate multiple actors, directors and writers by comma.</p>
+<div class="container" style="margin-top: 40px">
+  <br />
+  <form class="row g-3 xs 6" method="POST">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" name="title" />
     </div>
+    <div class="col-md-3">
+      <label for="released" class="form-label">Date Released</label>
+      <input type="date" class="form-control" name="released" />
+    </div>
+    <div class="col-3">
+      <label for="rated" class="form-label">Rated</label>
+      <select name="rated" class="form-select">
+        <option selected>G</option>
+        <option>R</option>
+        <option>PG</option>
+        <option>PG-13</option>
+        <option>NC-17</option>
+      </select>
+    </div>
+    <div class="col-3">
+      <label for="Runtime" class="form-label">Runtime</label>
+      <div class="input-group">
+        <input type="text" class="form-control" name="runtime" />
+        <span class="input-group-text" id="basic-addon1">Min</span>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <label for="plot" class="form-label">Plot</label>
+      <input type="text" class="form-control" name="plot" />
+    </div>
+    <div class="col-md-4">
+      <label for="genre" class="form-label">Genre</label>
+      <select name="genre" class="form-select">
+        <option multiple>Action</option>
+        <option>Horror</option>
+        <option>Drama</option>
+        <option>Science Fiction</option>
+        <option>Documentary</option>
+        <option>Comedy</option>
+      </select>
+    </div>
+    <div class="col-md-8">
+      <label for="actors" class="form-label">Actors</label>
+      <input type="text" class="form-control" name="actors" />
+    </div>
+    <div class="col-md-6">
+      <label for="directors" class="form-label">Directors</label>
+      <input type="text" class="form-control" name="directors" />
+    </div>
+    <div class="col-md-6">
+      <label for="writers" class="form-label">Writers</label>
+      <input type="text" class="form-control" name="writers" />
+    </div>
+    <div class="col-md-3">
+      <label for="awards" class="form-label">Awards</label>
+      <input type="text" class="form-control" name="awards" />
+    </div>
+    <div class="col-md-9">
+      <label for="poster" class="form-label">Poster</label>
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">URL</span>
+        <input type="text" class="form-control" name="poster" />
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="submit" id="addmovie" class="btn btn-primary">
+        Submit
+      </button>
+    </div>
+  </form>
+  <hr />
+  <p>Seperate multiple actors, directors and writers by comma.</p>
+</div>
 
 {% endblock content %}
