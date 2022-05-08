@@ -47,4 +47,4 @@ with open("movie-data/movie-data-100.json") as json_file:
 
 if __name__ == '__main__':
     print("Populating the movies!")
-    print("All movies added th the database successfully!")
+    print("All movies added to the database successfully!")

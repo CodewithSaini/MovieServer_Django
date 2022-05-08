@@ -2,6 +2,16 @@
 <title>Movies by Genre</title>
 {% endblock title %} {% block content %}
 
-<div class="container"></div>
-
+<div class="container" style="margin-top: 40px">
+  <br />
+  {% for genre in genres %}
+  <a
+    class="btn btn-dark"
+    style="width: 180px; height: 100px; margin: 10px"
+    href="#"
+    role="button"
+    >{{genre}}</a
+  >
+  {% endfor %}
+</div>
 {% endblock content %}

@@ -1,10 +1,15 @@
+from calendar import different_locale
 import datetime
+from datetime import date
+from datetime import timedelta
+from email import message
 from django.core.paginator import Paginator
 from platform import release
 from django.shortcuts import render
 from django.http import HttpResponse
 from .import models
 from ViewMovie.models import Movie
+from django.contrib import messages
 # Create your views here.
 
 
@@ -18,7 +23,8 @@ def movies(request):
     print(content.count())
     page_number = request.GET.get('page')
     movies = paginator.get_page(page_number)
-    return render(request, 'movies.html', {'movies': movies})
+    nums = "x"*movies.paginator.num_pages
+    return render(request, 'movies.html', {'movies': movies, 'nums': nums})
 
 
 def log_in(request):
@@ -26,18 +32,33 @@ def log_in(request):
 
 
 def latest_movies(request):
-    latest_movies = Movie.objects.all().order_by('-released')
-    return render(request, 'latestmovies.html', {'movies': latest_movies})
+    content = Movie.objects.all().order_by('-released')
+    paginator = Paginator(content, 25)  # Show 25 contacts per page.
+    print(content.count())
+    page_number = request.GET.get('page')
+    movies = paginator.get_page(page_number)
+    nums = "x"*movies.paginator.num_pages
+    return render(request, 'latestmovies.html', {'movies': movies, 'nums': nums})
 
 
 def comming_soon(request):
-    latest_movies = Movie.objects.filter()
-    return render(request, 'latestmovies.html', {})
+    today_date = date.today()
+    future_date = today_date+timedelta(days=60)
+    print(future_date)
+    comming_soon_movies = Movie.objects.filter(
+        released__range=(today_date, future_date))
+
+    return render(request, 'commingsoon.html', {'movies': comming_soon_movies})
 
 
 def movie_by_genre(request):
-    latest_movies = Movie.objects.filter()
-    return render(request, 'bygenre.html', {})
+    genres = Movie.objects.values('genre').distinct()
+    x = list(genres)
+    different_genres = []
+    for genre in x:
+        different_genres.append(genre['genre'])
+    messages.success(request, 'You are at genres!')
+    return render(request, 'bygenre.html', {'genres': different_genres})
 
 
 def movie_page(request, title):
@@ -47,6 +68,11 @@ def movie_page(request, title):
 
 
 def add_movie(request):
+    genres = Movie.objects.values('genre').distinct()
+    x = list(genres)
+    different_genres = []
+    for genre in x:
+        different_genres.append(genre['genre'])
     if request.method == 'POST':
         posted_movie = request.POST.dict()
         posted_date = posted_movie['released'].split('-')
@@ -67,4 +93,4 @@ def add_movie(request):
                           )
         print(new_movie)
         new_movie.save()
-    return render(request, 'addmovie.html', {'navbar': 'addmovie'})
+    return render(request, 'addmovie.html', {'navbar': 'addmovie', 'genres': different_genres})

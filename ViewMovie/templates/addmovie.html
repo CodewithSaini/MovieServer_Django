@@ -40,12 +40,9 @@
     <div class="col-md-4">
       <label for="genre" class="form-label">Genre</label>
       <select name="genre" class="form-select">
-        <option multiple>Action</option>
-        <option>Horror</option>
-        <option>Drama</option>
-        <option>Science Fiction</option>
-        <option>Documentary</option>
-        <option>Comedy</option>
+        {% for genre in genres %}
+        <option>{{genre}}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="col-md-8">
