@@ -1,11 +1,15 @@
-from operator import truediv
-from re import M
-from tkinter import Widget
+from django.contrib.auth.models import User
 from django.db import models
-from pkg_resources import require
-from setuptools import Require
+
 
 # Create your models here.
+
+
+class UserInfo(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
 
 
 class Movie(models.Model):
@@ -23,3 +27,12 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Review(models.Model):
+    review_score = models.IntegerField()
+    review_summary = models.TextField()
+    movie_reviewed = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.review_summary

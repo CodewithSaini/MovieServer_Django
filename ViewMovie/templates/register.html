@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% block title %}
+<title>Register</title>
+{% endblock title %} {% block content %}
+
+<div class="container" style="margin-top: 40px">
+  <br />
+    <div class="form-group" style="width:400px; height:600px; margin:auto; border: 1px solid #2d2e30;">    
+    {% csrf_token %}    
+    <div class="content2" style="margin:20px; margin-right:30px; ">
+        <h4>Register</h4>
+        <br>
+        <input
+            type="text"
+            class="form-control"
+            id="first_name"
+            placeholder="Firstname"
+            style="margin-bottom: 20px"
+            
+        />
+        <input
+            type="text"
+            class="form-control"
+            id="last_name"
+            placeholder="Lastname"
+            style="margin-bottom: 20px"
+            
+        />
+        <input
+            type="text"
+            class="form-control"
+            id="username"
+            placeholder="Username"
+            style="margin-bottom: 20px"
+            
+        />
+        
+        <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Password"
+            
+        />
+        <button style="margin-top:20px" type="submit" class="btn btn-primary">Register</button>
+        <br>
+        <hr>
+        <h6>Arleady have an account?</h6>
+        <a href="{% url 'login' % }"> Login</a>
+
+    </div>
+      
+    </div>
+    
+  </form>
+</div>
+
+{% endblock content %}

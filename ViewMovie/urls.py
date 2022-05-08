@@ -10,5 +10,6 @@ urlpatterns = [
     path('latestmovies/', views.latest_movies, name="latestmovies"),
     path('commingsoon/', views.comming_soon, name="commingsoon"),
     path('bygenre/', views.movie_by_genre, name="bygenre"),
-    path('movies/<str:title>/', views.movie_page, name="movies")
+    path('movies/<str:title>/', views.movie_page, name="movies"),
+    path('user/register/', views.register, name="register")
 ]

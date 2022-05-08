@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from platform import release
 from django.shortcuts import render
 from django.http import HttpResponse
+from ViewMovie.forms import UserInfoForm
 from .import models
 from ViewMovie.models import Movie
 from django.contrib import messages
@@ -94,3 +95,12 @@ def add_movie(request):
         print(new_movie)
         new_movie.save()
     return render(request, 'addmovie.html', {'navbar': 'addmovie', 'genres': different_genres})
+
+
+def register(request):
+    if request.method == "POST":
+        user_form = UserInfoForm(data=request.POST)
+    else:
+        user_form = UserInfoForm()
+
+    return render(request, 'register.html', {'user_form': user_form})
