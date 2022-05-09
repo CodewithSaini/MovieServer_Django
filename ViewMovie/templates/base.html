@@ -87,12 +87,26 @@
                   </li>
                   <li>
                     <a class="dropdown-item" href="{% url 'bygenre' %}"
-                      >Movies by genre</a
+                      >Browse by genre</a
                     >
                   </li>
                 </ul>
               </li>
             </ul>
+            <form class="d-flex" style="margin-right: 10px" method="POST">
+              {% csrf_token %}
+              <input
+                class="form-control me-2"
+                type="text"
+                placeholder="Search"
+                aria-label="Search"
+                name="search_title"
+                value=""
+              />
+              <button class="btn btn-outline-success" type="submit">
+                Search
+              </button>
+            </form>
             <ul class="navbar-nav me-right">
               <li class="nav-item">
                 <a

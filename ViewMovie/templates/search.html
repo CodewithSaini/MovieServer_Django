@@ -1,23 +1,23 @@
 {% extends 'base.html' %} {% block title %}
-<title>Movies (A-Z)</title>
+<title>Searched Movies</title>
 {% endblock title %} {% block content %}
 
 <div class="container">
-  <h1>Movies</h1>
-  <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-    {% for movie in movies %}
-    <div class="card" style="width: 15rem; height: 20rem; margin: 7px">
-      <a href="{% url 'one_movie' movie.title %}"
-        ><img
-          src="{{ movie.poster }}"
-          class="card-img-top"
-          style="width: 238px; height: 318px"
-          alt="no image found"
-      /></a>
+    <h1>Movies</h1>
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+      {% for movie in movies %}
+      <div class="card" style="width: 15rem; height:20rem; margin: 7px;">
+        <a href="{% url 'one_movie' movie.title %}"
+          ><img
+            src="{{ movie.poster }}"
+            class="card-img-top"
+            style="width: 238px; height: 318px"
+            alt="no image found"
+        /></a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
-  <hr />
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       {% if movies.has_previous %}

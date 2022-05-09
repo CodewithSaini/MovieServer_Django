@@ -1,21 +1,51 @@
-from calendar import different_locale
 import datetime
 from datetime import date
 from datetime import timedelta
 from email import message
 from django.core.paginator import Paginator
-from platform import release
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from ViewMovie.forms import UserInfoForm, UserLogInForm
-from .import models
 from ViewMovie.models import Movie
 from django.contrib import messages
 # Create your views here.
 
 
+def search_movie(title):
+    if len(title) > 0:
+        print(len(title))
+        if Movie.objects.filter(title__contains=title):
+            mov = Movie.objects.filter(title__contains=title)
+            return mov
+        else:
+            return 'no movie'
+    else:
+        return 0
+
+
 def home_page(request):
-    return render(request, 'home.html', {'navbar': 'home'})
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    print(s_title)
+    print(searched_movies)
+    if request.method == "POST" and searched_movies != 0:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
+    else:
+        today_date = datetime.date.today()
+        future_date = today_date + timedelta(days=30)
+        past_date = today_date - timedelta(days=14)
+        featured_movie = Movie.objects.filter(
+            released__range=(past_date, future_date))
+
+        print(featured_movie)
+        return render(request, 'home.html', {'navbar': 'home'})
 
 
 def movies(request):
@@ -82,9 +112,14 @@ def movie_page(request, title):
 def add_movie(request):
     genres = Movie.objects.values('genre').distinct()
     x = list(genres)
+    # print(x)
     different_genres = []
     for genre in x:
-        different_genres.append(genre['genre'])
+        y = genre['genre'].split(", ")
+        for g in y:
+            if g not in different_genres:
+                different_genres.append(g)
+    print(different_genres)
     if request.method == 'POST':
         posted_movie = request.POST.dict()
         posted_date = posted_movie['released'].split('-')
@@ -110,6 +145,7 @@ def add_movie(request):
 
 def register(request):
     if request.method == "POST":
+        print(request.POST)
         user_form = UserInfoForm(data=request.POST)
     else:
         user_form = UserInfoForm()
