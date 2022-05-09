@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from platform import release
 from django.shortcuts import render
 from django.http import HttpResponse
-from ViewMovie.forms import UserInfoForm
+from ViewMovie.forms import UserInfoForm, UserLogInForm
 from .import models
 from ViewMovie.models import Movie
 from django.contrib import messages
@@ -29,7 +29,12 @@ def movies(request):
 
 
 def log_in(request):
-    return render(request, 'login.html', {'navbar': 'login'})
+    if request.method == 'POST':
+        user_login_form = UserLogInForm(data=request.POST)
+    else:
+        user_login_form = UserLogInForm()
+
+    return render(request, 'login.html', {'user_login_form': user_login_form})
 
 
 def latest_movies(request):
@@ -55,17 +60,23 @@ def comming_soon(request):
 def movie_by_genre(request):
     genres = Movie.objects.values('genre').distinct()
     x = list(genres)
+    # print(x)
     different_genres = []
     for genre in x:
-        different_genres.append(genre['genre'])
+        y = genre['genre'].split(", ")
+        for g in y:
+            if g not in different_genres:
+                different_genres.append(g)
+    print(different_genres)
     messages.success(request, 'You are at genres!')
     return render(request, 'bygenre.html', {'genres': different_genres})
 
 
 def movie_page(request, title):
-    print(title)
     movie = Movie.objects.get(title=title)
-    return render(request, 'moviepage.html', {"movie": movie})
+    actor = movie.actors.split(", ")
+    print(actor)
+    return render(request, 'moviepage.html', {"movie": movie, 'actors': actor})
 
 
 def add_movie(request):
@@ -103,4 +114,4 @@ def register(request):
     else:
         user_form = UserInfoForm()
 
-    return render(request, 'register.html', {'user_form': user_form})
+    return render(request, 'register.html', {'navbar': 'register', 'user_form': user_form})
