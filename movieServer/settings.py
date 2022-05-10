@@ -118,8 +118,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIR = [
-    "/ViewMovie/static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "ViewMovie/static/"
 ]
 
 # Default primary key field type

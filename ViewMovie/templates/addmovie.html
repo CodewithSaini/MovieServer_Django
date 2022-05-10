@@ -10,11 +10,16 @@
     {% csrf_token %}
     <div class="col-md-6">
       <label for="title" class="form-label">Title</label>
-      <input type="text" class="form-control" name="title" />
+      <input type="text" autocomplete="off" class="form-control" name="title" />
     </div>
     <div class="col-md-3">
       <label for="released" class="form-label">Date Released</label>
-      <input type="date" class="form-control" name="released" />
+      <input
+        type="date"
+        autocomplete="off"
+        class="form-control"
+        name="released"
+      />
     </div>
     <div class="col-3">
       <label for="rated" class="form-label">Rated</label>
@@ -29,13 +34,18 @@
     <div class="col-3">
       <label for="Runtime" class="form-label">Runtime</label>
       <div class="input-group">
-        <input type="text" class="form-control" name="runtime" />
+        <input
+          type="text"
+          class="form-control"
+          autocomplete="off"
+          name="runtime"
+        />
         <span class="input-group-text" id="basic-addon1">Min</span>
       </div>
     </div>
     <div class="col-md-9">
       <label for="plot" class="form-label">Plot</label>
-      <input type="text" class="form-control" name="plot" />
+      <input type="text" autocomplete="off" class="form-control" name="plot" />
     </div>
     <div class="col-md-4">
       <label for="genre" class="form-label">Genre</label>
@@ -47,25 +57,50 @@
     </div>
     <div class="col-md-8">
       <label for="actors" class="form-label">Actors</label>
-      <input type="text" class="form-control" name="actors" />
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        name="actors"
+      />
     </div>
     <div class="col-md-6">
       <label for="directors" class="form-label">Directors</label>
-      <input type="text" class="form-control" name="directors" />
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        name="directors"
+      />
     </div>
     <div class="col-md-6">
       <label for="writers" class="form-label">Writers</label>
-      <input type="text" class="form-control" name="writers" />
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        name="writers"
+      />
     </div>
     <div class="col-md-3">
       <label for="awards" class="form-label">Awards</label>
-      <input type="text" class="form-control" name="awards" />
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        name="awards"
+      />
     </div>
     <div class="col-md-9">
       <label for="poster" class="form-label">Poster</label>
       <div class="input-group">
         <span class="input-group-text" id="basic-addon1">URL</span>
-        <input type="text" class="form-control" name="poster" />
+        <input
+          type="text"
+          autocomplete="off"
+          class="form-control"
+          name="poster"
+        />
       </div>
     </div>
     <div class="col-12">
