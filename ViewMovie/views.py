@@ -40,12 +40,12 @@ def home_page(request):
     else:
         today_date = datetime.date.today()
         future_date = today_date + timedelta(days=30)
-        past_date = today_date - timedelta(days=14)
+        past_date = today_date - timedelta(days=60)
         featured_movie = Movie.objects.filter(
             released__range=(past_date, future_date))
 
         print(featured_movie)
-        return render(request, 'home.html', {'navbar': 'home'})
+        return render(request, 'home.html', {'navbar': 'home', 'feature_movie': featured_movie})
 
 
 def movies(request):
