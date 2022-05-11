@@ -26,13 +26,13 @@ def search_movie(title):
 def home_page(request):
     s_title = request.POST.get('search_title', "")
     searched_movies = search_movie(s_title)
-    print(s_title)
-    print(searched_movies)
-    if request.method == "POST" and searched_movies != 0:
+    print(request.POST)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
         if searched_movies == 'no movie':
             return redirect('/')
         else:
             if searched_movies.count() == 1:
+                print("hi")
                 return render(request, 'search.html', {'movies': searched_movies})
             elif searched_movies.count() > 1:
                 return render(request, 'search.html', {'movies': searched_movies})
@@ -45,7 +45,7 @@ def home_page(request):
             released__range=(past_date, future_date))
 
         print(featured_movie)
-        return render(request, 'home.html', {'navbar': 'home', 'feature_movie': featured_movie})
+        return render(request, 'home.html', {'navbar': 'home', 'feature_movie': featured_movie, 'home': "home"})
 
 
 def movies(request):
@@ -55,6 +55,7 @@ def movies(request):
     page_number = request.GET.get('page')
     movies = paginator.get_page(page_number)
     nums = "x"*movies.paginator.num_pages
+
     return render(request, 'movies.html', {'movies': movies, 'nums': nums})
 
 
@@ -98,7 +99,7 @@ def movie_by_genre(request):
             if g not in different_genres:
                 different_genres.append(g)
     print(different_genres)
-    messages.success(request, 'You are at genres!')
+    #messages.success(request, 'You are at genres!')
     return render(request, 'bygenre.html', {'genres': different_genres})
 
 
@@ -144,10 +145,26 @@ def add_movie(request):
 
 
 def register(request):
-    if request.method == "POST":
-        print(request.POST)
-        user_form = UserInfoForm(data=request.POST)
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    print(request.POST)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     else:
-        user_form = UserInfoForm()
+        if request.method == "POST" and 'register_btn' in request.POST:
+            user_form = UserInfoForm(data=request.POST)
+            if user_form.is_valid():
+                print(request.POST)
+                user_form.save()
+        else:
+            user_form = UserInfoForm()
 
     return render(request, 'register.html', {'navbar': 'register', 'user_form': user_form})

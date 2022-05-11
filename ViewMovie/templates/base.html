@@ -95,7 +95,12 @@
                 </ul>
               </li>
             </ul>
-            <form class="d-flex" style="margin-right: 10px" method="POST">
+            <form
+              class="d-flex"
+              id="search_form"
+              style="margin-right: 10px"
+              method="POST"
+            >
               {% csrf_token %}
               <input
                 autocomplete="off"
@@ -104,9 +109,13 @@
                 placeholder="Search"
                 aria-label="Search"
                 name="search_title"
-                value=""
               />
-              <button class="btn btn-outline-success" type="submit">
+              <button
+                class="btn btn-outline-success"
+                id="search-btn"
+                type="submit"
+                name="search_btn"
+              >
                 Search
               </button>
             </form>
@@ -131,7 +140,9 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+    {% if home == "home" %}
     <script src="{% static 'js/home.js' %}"></script>
+    {% endif %}
     <div class="b-example-divider"></div>
 
     <div class="container">

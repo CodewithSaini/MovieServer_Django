@@ -1,46 +1,70 @@
 {% extends 'base.html' %} {% block title %}
 <title>Login</title>
-<body style="background:#d9d9d9"></body>
+<body style="background: #d9d9d9"></body>
 {% endblock title %} {% block content %}
 
-<div class="container" style=" display:flex; margin-top: 80px;">
+<div class="container" style="display: flex; margin-top: 80px">
   <br />
-    <div class="form-group" style="width:350px; height:450px; margin:auto; border: 1px solid #2d2e30; border-radius: 2%; background-color:white">    
-    {% csrf_token %}    
-    <div class="content2" style="margin:20px; margin-right:30px; text-align:center; background-color:white">
+  <form
+    action="{% url 'login' %}"
+    id="login_form"
+    method="POST"
+    style="margin: auto"
+  >
+    <div
+      style="
+        width: 350px;
+        height: 450px;
+        margin: auto;
+        border: 1px solid #2d2e30;
+        border-radius: 2%;
+        background-color: white;
+      "
+    >
+      {% csrf_token %}
+      <div
+        class="content2"
+        style="
+          margin: 30px;
+          margin-right: 30px;
+          text-align: center;
+          background-color: white;
+        "
+      >
         <h1>Log In</h1>
-        <br>
-        <br>
-        <br>
-        
+        <br />
+        <br />
         <input
-            type="text"
-            class="form-control"
-            id="username"
-            placeholder="Username"
-            style="margin-bottom: 20px"
-            autocomplete="off"
-            
+          type="text"
+          class="form-control"
+          id="username"
+          placeholder="Username"
+          style="margin-bottom: 10px"
+          autocomplete="off"
         />
-        
-        <input
-            type="password"
-            class="form-control"
-            id="password"
-            placeholder="Password"
-            autocomplete="off"
-            
-        />
-        <button style="margin-top:20px" type="submit" class="btn btn-primary">Log In</button>
-        <br>
-        <hr>
-        <h6>Don't have an account? <a href="{% url 'register' %}"> Register</a></h6>
-        
 
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Password"
+          autocomplete="off"
+        />
+        <button
+          style="margin-top: 20px"
+          type="submit"
+          name="login_btn"
+          class="btn btn-primary"
+        >
+          Log In
+        </button>
+        <br />
+        <hr />
+        <h6>
+          Don't have an account? <a href="{% url 'register' %}"> Register</a>
+        </h6>
+      </div>
     </div>
-      
-    </div>
-    
   </form>
 </div>
 
