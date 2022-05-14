@@ -49,6 +49,18 @@ def home_page(request):
 
 
 def movies(request):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     content = Movie.objects.all().order_by('title')
     paginator = Paginator(content, 25)  # Show 25 contacts per page.
     print(content.count())
@@ -61,6 +73,18 @@ def movies(request):
 
 
 def log_in(request):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     if request.method == 'POST':
         user_login_form = UserLogInForm(data=request.POST)
     else:
@@ -70,6 +94,18 @@ def log_in(request):
 
 
 def just_released(request):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     today_date = date.today()
     past_date = today_date - timedelta(days=30)
     content = Movie.objects.filter(released__range=(past_date, today_date))
@@ -82,6 +118,18 @@ def just_released(request):
 
 
 def comming_soon(request):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     today_date = date.today()
     future_date = today_date+timedelta(days=60)
     print(future_date)
@@ -92,6 +140,18 @@ def comming_soon(request):
 
 
 def movie_by_genre(request):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     all_genres = []
     genres = Movie.movie_genres
     for genre in genres:
@@ -100,6 +160,18 @@ def movie_by_genre(request):
 
 
 def one_genre_movies(request, genre):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     print(genre)
     one_genre = Movie.objects.filter(genre__contains=genre)
 
@@ -107,6 +179,18 @@ def one_genre_movies(request, genre):
 
 
 def movie_page(request, title):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
     movie = Movie.objects.get(title=title)
     actor = movie.actors.split(", ")
     print(actor)
@@ -194,3 +278,24 @@ def update_movie(request, title):
     else:
         add_movie_form = AddMovieForm
         return render(request, 'addmovie.html', {'navbar': 'addmovie', 'add_movie_form': update_movie_form})
+
+
+def delete_movie(request, title):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
+    movie = Movie.objects.get(title=title)
+    delete_movie_form = AddMovieForm(instance=movie)
+    if request.method == 'POST' and "delete_btn_final" in request.POST:
+        movie.delete()
+        return redirect('movies')
+    return render(request, 'delete.html', {'title': title, 'movie': movie})
