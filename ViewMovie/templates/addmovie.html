@@ -6,111 +6,69 @@
 
 <div class="container" style="margin-top: 40px">
   <br />
-  <form class="row g-3 xs 6" method="POST">
+  <form class="row g-3" method="POST">
     {% csrf_token %}
     <div class="col-md-6">
-      <label for="title" class="form-label">Title</label>
-      <input type="text" autocomplete="off" class="form-control" name="title" />
+      {{add_movie_form.title.label}} {{add_movie_form.title}}
     </div>
     <div class="col-md-3">
-      <label for="released" class="form-label">Date Released</label>
-      <input
-        type="date"
-        autocomplete="off"
-        class="form-control"
-        name="released"
-      />
+      {{add_movie_form.released.label}} {{add_movie_form.released}}
     </div>
     <div class="col-3">
-      <label for="rated" class="form-label">Rated</label>
-      <select name="rated" class="form-select">
-        <option selected>G</option>
-        <option>R</option>
-        <option>PG</option>
-        <option>PG-13</option>
-        <option>NC-17</option>
-      </select>
-    </div>
-    <div class="col-3">
-      <label for="Runtime" class="form-label">Runtime</label>
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          autocomplete="off"
-          name="runtime"
-        />
-        <span class="input-group-text" id="basic-addon1">Min</span>
-      </div>
-    </div>
-    <div class="col-md-9">
-      <label for="plot" class="form-label">Plot</label>
-      <input type="text" autocomplete="off" class="form-control" name="plot" />
-    </div>
-    <div class="col-md-4">
-      <label for="genre" class="form-label">Genre</label>
-      <select name="genre" class="form-select">
-        {% for genre in genres %}
-        <option>{{genre}}</option>
-        {% endfor %}
-      </select>
+      {{add_movie_form.rated.label}} {{add_movie_form.rated}}
     </div>
     <div class="col-md-8">
-      <label for="actors" class="form-label">Actors</label>
-      <input
-        type="text"
-        autocomplete="off"
-        class="form-control"
-        name="actors"
-      />
+      {{add_movie_form.plot.label}} {{add_movie_form.plot}}
+    </div>
+    <div class="col-md-4">
+      {{add_movie_form.genre.label}}
+      
+      {{add_movie_form.genre}}
+
+    </div>
+    <div class="col-4">
+      {{add_movie_form.runtime.label}}
+      <div class="input-group">
+         {{add_movie_form.runtime}}<span class="input-group-text""
+         >Minutes</span
+       >
+      </div>
+    </div>
+    <div class="col-md-8">
+      {{add_movie_form.actors.label}} {{add_movie_form.actors}}
     </div>
     <div class="col-md-6">
-      <label for="directors" class="form-label">Directors</label>
-      <input
-        type="text"
-        autocomplete="off"
-        class="form-control"
-        name="directors"
-      />
+      {{add_movie_form.directors.label}} {{add_movie_form.directors}}
     </div>
     <div class="col-md-6">
-      <label for="writers" class="form-label">Writers</label>
-      <input
-        type="text"
-        autocomplete="off"
-        class="form-control"
-        name="writers"
-      />
+      {{add_movie_form.writers.label}} {{add_movie_form.writers}}
     </div>
     <div class="col-md-3">
-      <label for="awards" class="form-label">Awards</label>
-      <input
-        type="text"
-        autocomplete="off"
-        class="form-control"
-        name="awards"
-      />
+      {{add_movie_form.awards.label}} {{add_movie_form.awards}}
     </div>
     <div class="col-md-9">
-      <label for="poster" class="form-label">Poster</label>
+      {{add_movie_form.poster.label}}
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon1">URL</span>
-        <input
-          type="text"
-          autocomplete="off"
-          class="form-control"
-          name="poster"
-        />
+        <span class="input-group-text""
+          >URL</span
+        >
+        {{add_movie_form.poster}}
       </div>
     </div>
     <div class="col-12">
-      <button type="submit" id="addmovie" class="btn btn-primary">
+      <button
+        type="submit"
+        name="add_movie_btn"
+        id="addmovie"
+        class="btn btn-primary"
+      >
         Submit
       </button>
     </div>
   </form>
+  <br>
   <hr />
-  <p>Seperate multiple actors, directors and writers by comma.</p>
+  <small>Seperate multiple actors, directors and writers by comma.</small>
 </div>
 
 {% endblock content %}

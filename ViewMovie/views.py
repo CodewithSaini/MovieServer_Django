@@ -5,7 +5,7 @@ from email import message
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from ViewMovie.forms import UserInfoForm, UserLogInForm
+from ViewMovie.forms import UserInfoForm, UserLogInForm, AddMovieForm
 from ViewMovie.models import Movie
 from django.contrib import messages
 # Create your views here.
@@ -55,8 +55,9 @@ def movies(request):
     page_number = request.GET.get('page')
     movies = paginator.get_page(page_number)
     nums = "x"*movies.paginator.num_pages
-
-    return render(request, 'movies.html', {'movies': movies, 'nums': nums})
+    for movie in movies:
+        print(movie.genre)
+    return render(request, 'movies.html', {'movies': movies})
 
 
 def log_in(request):
@@ -68,8 +69,10 @@ def log_in(request):
     return render(request, 'login.html', {'user_login_form': user_login_form})
 
 
-def latest_movies(request):
-    content = Movie.objects.all().order_by('-released')
+def just_released(request):
+    today_date = date.today()
+    past_date = today_date - timedelta(days=30)
+    content = Movie.objects.filter(released__range=(past_date, today_date))
     paginator = Paginator(content, 25)  # Show 25 contacts per page.
     print(content.count())
     page_number = request.GET.get('page')
@@ -89,18 +92,18 @@ def comming_soon(request):
 
 
 def movie_by_genre(request):
-    genres = Movie.objects.values('genre').distinct()
-    x = list(genres)
-    # print(x)
-    different_genres = []
-    for genre in x:
-        y = genre['genre'].split(", ")
-        for g in y:
-            if g not in different_genres:
-                different_genres.append(g)
-    print(different_genres)
-    #messages.success(request, 'You are at genres!')
-    return render(request, 'bygenre.html', {'genres': different_genres})
+    all_genres = []
+    genres = Movie.movie_genres
+    for genre in genres:
+        all_genres.append(genre[0])
+    return render(request, 'bygenre.html', {'genres': all_genres})
+
+
+def one_genre_movies(request, genre):
+    print(genre)
+    one_genre = Movie.objects.filter(genre__contains=genre)
+
+    return render(request, 'search.html', {'movies': one_genre})
 
 
 def movie_page(request, title):
@@ -111,37 +114,31 @@ def movie_page(request, title):
 
 
 def add_movie(request):
-    genres = Movie.objects.values('genre').distinct()
-    x = list(genres)
-    # print(x)
-    different_genres = []
-    for genre in x:
-        y = genre['genre'].split(", ")
-        for g in y:
-            if g not in different_genres:
-                different_genres.append(g)
-    print(different_genres)
-    if request.method == 'POST':
-        posted_movie = request.POST.dict()
-        posted_date = posted_movie['released'].split('-')
-        released_date = datetime.date(
-            int(posted_date[0]), int(posted_date[1]), int(posted_date[2]))
-        print(posted_movie['released'].split('-'))
-        new_movie = Movie(title=posted_movie['title'],
-                          released=released_date,
-                          rated=posted_movie['rated'],
-                          runtime=posted_movie['runtime']+" min",
-                          plot=posted_movie['plot'],
-                          genre=posted_movie['genre'],
-                          actors=posted_movie['actors'],
-                          directors=posted_movie['directors'],
-                          writers=posted_movie['writers'],
-                          awards=posted_movie['awards'],
-                          poster=posted_movie['poster'],
-                          )
-        print(new_movie)
-        new_movie.save()
-    return render(request, 'addmovie.html', {'navbar': 'addmovie', 'genres': different_genres})
+    print(request.POST)
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == 'POST' and "add_movie_btn" in request.POST:
+        add_movie_form = AddMovieForm(data=request.POST)
+        if add_movie_form.is_valid():
+            add_movie_form.save()
+            print("Movie is added to the database.")
+            return redirect('movies')
+        else:
+            print("hi")
+            print(add_movie_form.errors.as_data())
+
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+    else:
+        add_movie_form = AddMovieForm
+        return render(request, 'addmovie.html', {'navbar': 'addmovie', 'add_movie_form': add_movie_form})
 
 
 def register(request):
@@ -150,7 +147,7 @@ def register(request):
     print(request.POST)
     if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
         if searched_movies == 'no movie':
-            return redirect('/')
+            return redirect('register')
         else:
             if searched_movies.count() == 1:
                 print("hi")
@@ -168,3 +165,32 @@ def register(request):
             user_form = UserInfoForm()
 
     return render(request, 'register.html', {'navbar': 'register', 'user_form': user_form})
+
+
+def update_movie(request, title):
+    print(request.POST)
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    movie = Movie.objects.get(title=title)
+    update_movie_form = AddMovieForm(instance=movie)
+    if request.method == 'POST' and "add_movie_btn" in request.POST:
+        update_movie_form = AddMovieForm(data=request.POST, instance=movie)
+        if update_movie_form.is_valid():
+            update_movie_form.save()
+            print("Movie fields are updated!")
+            return redirect('/movies/' + title)
+        else:
+            print("hi")
+            print(update_movie_form.errors.as_data())
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+    else:
+        add_movie_form = AddMovieForm
+        return render(request, 'addmovie.html', {'navbar': 'addmovie', 'add_movie_form': update_movie_form})

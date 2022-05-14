@@ -1,7 +1,8 @@
+from re import M
 from django import forms
-from django.forms import ModelForm, TextInput, EmailInput, PasswordInput
+from django.forms import CheckboxInput, ModelForm, TextInput, Textarea, Select, PasswordInput, DateInput, SelectMultiple, MultipleChoiceField
 from django.contrib.auth.models import User
-from ViewMovie.models import UserInfo
+from ViewMovie.models import Movie, UserInfo
 
 
 class UserInfoForm(forms.ModelForm):
@@ -13,7 +14,8 @@ class UserInfoForm(forms.ModelForm):
             'username': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Username',
-                'auto-complete': 'off'
+                'auto-complete': 'off',
+
 
             }),
             'first_name': TextInput(attrs={
@@ -42,3 +44,65 @@ class UserLogInForm(ModelForm):
     class Meta():
         model = User
         fields = ('username', 'password')
+
+
+class AddMovieForm(ModelForm):
+
+    class Meta():
+
+        model = Movie
+        fields = ('title', 'released', 'rated', 'plot', 'genre', 'actors',
+                  'directors', 'runtime', 'writers', 'poster', 'awards')
+
+        widgets = {
+            'title': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+            'released': DateInput(attrs={
+                'class': 'form-control',
+
+                'type': 'date'
+            }),
+            'rated': Select(attrs={
+                'class': 'form-select',
+
+            }),
+            'genre': SelectMultiple(attrs={
+                'class': 'form-select'
+            }),
+            'runtime': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+            'plot': Textarea(attrs={
+                'class': 'form-control',
+                'style': 'height:92px',
+                'rows': 5,
+                'cols': 100,
+
+            }),
+
+
+            'actors': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+            'directors': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+            'writers': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+            'awards': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+            'poster': TextInput(attrs={
+                'class': 'form-control',
+
+            }),
+
+        }

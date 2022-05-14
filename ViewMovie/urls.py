@@ -7,9 +7,11 @@ urlpatterns = [
     path('addmovie/', views.add_movie, name="addmovie"),
     path('movies/', views.movies, name="movies"),
     path('user/login/', views.log_in, name="login"),
-    path('latestmovies/', views.latest_movies, name="latestmovies"),
+    path('justreleased/', views.just_released, name="justreleased"),
     path('commingsoon/', views.comming_soon, name="commingsoon"),
     path('bygenre/', views.movie_by_genre, name="bygenre"),
     path('movies/<str:title>/', views.movie_page, name="one_movie"),
-    path('user/register/', views.register, name="register")
+    path('user/register/', views.register, name="register"),
+    path('bygenre/<str:genre>', views.one_genre_movies, name="one_genre"),
+    path('movies/update/<str:title>/', views.update_movie, name="update")
 ]
