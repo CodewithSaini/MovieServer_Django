@@ -5,7 +5,7 @@ from email import message
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from ViewMovie.forms import UserInfoForm, UserLogInForm, AddMovieForm
+from ViewMovie.forms import UserInfoForm, UserLogInForm, AddMovieForm, ReviewForm
 from ViewMovie.models import Movie
 from django.contrib import messages
 # Create your views here.
@@ -299,3 +299,11 @@ def delete_movie(request, title):
         movie.delete()
         return redirect('movies')
     return render(request, 'delete.html', {'title': title, 'movie': movie})
+
+
+def addreview(request, title):
+    if request.method == 'POST':
+        reviewform = ReviewForm(data=request.POST)
+    else:
+        reviewform = ReviewForm()
+    return render(request, 'reviewform.html', {'reviewform': reviewform})

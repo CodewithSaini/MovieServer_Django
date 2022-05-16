@@ -21,6 +21,12 @@
     </ul>
   </div>
   <hr>
+  <div class="review">
+    {% if movie.title %}
+      <h3>Reviews:</h3>
+      <a href="{% url 'reviewform' movie.title %}">review</a>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock content %}

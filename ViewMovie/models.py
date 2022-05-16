@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import CheckboxSelectMultiple
@@ -57,8 +58,10 @@ class Movie(models.Model):
 
 class Review(models.Model):
     review_score = models.IntegerField()
-    review_summary = models.TextField()
-    movie_reviewed = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    review_summary = models.TextField(max_length=50)
+    full_review = models.TextField(max_length=300, blank=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.review_summary

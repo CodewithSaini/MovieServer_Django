@@ -2,7 +2,7 @@ from re import M
 from django import forms
 from django.forms import CheckboxInput, ModelForm, TextInput, Textarea, Select, PasswordInput, DateInput, SelectMultiple, MultipleChoiceField
 from django.contrib.auth.models import User
-from ViewMovie.models import Movie, UserInfo
+from ViewMovie.models import Movie, Review, UserInfo
 
 
 class UserInfoForm(forms.ModelForm):
@@ -106,3 +106,11 @@ class AddMovieForm(ModelForm):
             }),
 
         }
+
+
+class ReviewForm(ModelForm):
+
+    class Meta():
+        model = Review
+        fields = ('full_review', 'review_score',
+                  'review_summary', 'movie', 'user')

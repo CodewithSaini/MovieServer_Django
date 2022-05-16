@@ -14,5 +14,6 @@ urlpatterns = [
     path('user/register/', views.register, name="register"),
     path('bygenre/<str:genre>', views.one_genre_movies, name="one_genre"),
     path('movies/update/<str:title>/', views.update_movie, name="update"),
-    path('movies/delete/<str:title>/', views.delete_movie, name="delete")
+    path('movies/delete/<str:title>/', views.delete_movie, name="delete"),
+    path('movies/<str:title>/addreview/', views.addreview, name="reviewform")
 ]
