@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %}
 <title>Login</title>
-<body style="background: #d9d9d9"></body>
+
 {% endblock title %} {% block content %}
 
 <div class="container" style="display: flex; margin-top: 80px">
@@ -37,22 +37,24 @@
         <input
           type="text"
           class="form-control"
-          id="username"
+          name="username"
           placeholder="Username"
-          style="margin-bottom: 10px"
+          style="margin-top: 10px"
           autocomplete="off"
         />
 
         <input
           type="password"
           class="form-control"
-          id="password"
+          name="password"
           placeholder="Password"
+          style="margin-top: 10px"
           autocomplete="off"
         />
         <button
           style="margin-top: 20px"
           type="submit"
+          style="margin-top: 10px"
           name="login_btn"
           class="btn btn-primary"
         >
@@ -67,5 +69,6 @@
     </div>
   </form>
 </div>
-
+<br />
+<br />
 {% endblock content %}

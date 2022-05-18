@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-<title>Add Movie</title>
 {% block title %}
 <title>Add Movie</title>
 {% endblock title %} {% block content %}
@@ -22,9 +21,7 @@
     </div>
     <div class="col-md-4">
       {{add_movie_form.genre.label}}
-      
       {{add_movie_form.genre}}
-
     </div>
     <div class="col-4">
       {{add_movie_form.runtime.label}}
@@ -68,7 +65,7 @@
   </form>
   <br>
   <hr />
-  <small>Seperate multiple actors, directors and writers by comma.</small>
+  <small>Seperate actors, directors and writers by comma.</small>
 </div>
 
 {% endblock content %}

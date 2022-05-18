@@ -53,7 +53,7 @@ class Movie(models.Model):
     poster = models.URLField(null=True)
 
     def __str__(self):
-        return self.title
+        return self.title + "-"+str(self.id)
 
 
 class Review(models.Model):
@@ -64,4 +64,4 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.review_summary
+        return str(self.review_score)+"-"+self.review_summary+"-"+str(self.id)

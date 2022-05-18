@@ -2,6 +2,32 @@
 <title>Add Review</title>
 {% endblock title %} {% block content %}
 
-<div class="container">{{reviewform}}</div>
+<div class="container" style="margin-top: 80px">
+  <h2>Add Review for Movie: {{title}}</h2>
+  <br />
+  <form class="row g-2" method="POST">
+    {% csrf_token %}
+    <div class="col-md-3">
+      {{reviewform.review_score.label}} {{reviewform.review_score}}
+    </div>
+    <div class="col-md-9">
+      {{reviewform.review_summary.label}} {{reviewform.review_summary}}
+    </div>
+    <div class="col-md-12">
+      {{reviewform.full_review.label}} {{reviewform.full_review}}
+    </div>
+    <div class="col-md-12">
+      <button
+        type="submit"
+        name="add_review_btn"
+        id="adreview"
+        class="btn btn-primary"
+        style="margin-top: 10px"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
 
 {% endblock content %}

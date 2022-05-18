@@ -1,12 +1,13 @@
 import datetime
 from datetime import date
 from datetime import timedelta
-from email import message
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from ViewMovie.forms import UserInfoForm, UserLogInForm, AddMovieForm, ReviewForm
-from ViewMovie.models import Movie
+from ViewMovie.forms import UserInfoForm, AddMovieForm, ReviewForm
+from ViewMovie.models import Movie, Review, UserInfo, User
 from django.contrib import messages
 # Create your views here.
 
@@ -69,10 +70,10 @@ def movies(request):
     nums = "x"*movies.paginator.num_pages
     for movie in movies:
         print(movie.genre)
-    return render(request, 'movies.html', {'movies': movies})
+    return render(request, 'movies.html', {'movies': movies, 'navbar': 'movies'})
 
 
-def log_in(request):
+def log_user_in(request):
     s_title = request.POST.get('search_title', "")
     searched_movies = search_movie(s_title)
     if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
@@ -85,12 +86,30 @@ def log_in(request):
             elif searched_movies.count() > 1:
                 return render(request, 'search.html', {'movies': searched_movies})
 
-    if request.method == 'POST':
-        user_login_form = UserLogInForm(data=request.POST)
-    else:
-        user_login_form = UserLogInForm()
+    if request.method == 'POST' and "login_btn" in request.POST:
+        print(request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
 
-    return render(request, 'login.html', {'user_login_form': user_login_form})
+        if user is not None:
+            login(request, user)
+            print(user)
+            messages.success(request, "You have successfully Logged In.")
+            return redirect('profile')
+        else:
+            messages.error(
+                request, "You have entered invalid credentials. Please try again")
+            return redirect('login')
+    else:
+
+        return render(request, 'login.html', {'navbar': 'login'})
+
+
+@login_required
+def log_user_out(request):
+    logout(request)
+    return redirect('login')
 
 
 def just_released(request):
@@ -179,6 +198,7 @@ def one_genre_movies(request, genre):
 
 
 def movie_page(request, title):
+
     s_title = request.POST.get('search_title', "")
     searched_movies = search_movie(s_title)
     if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
@@ -192,9 +212,11 @@ def movie_page(request, title):
                 return render(request, 'search.html', {'movies': searched_movies})
 
     movie = Movie.objects.get(title=title)
+    reviews = Review.objects.filter(movie=movie)
+    print(reviews)
     actor = movie.actors.split(", ")
     print(actor)
-    return render(request, 'moviepage.html', {"movie": movie, 'actors': actor})
+    return render(request, 'moviepage.html', {"movie": movie, 'actors': actor, 'reviews': reviews})
 
 
 def add_movie(request):
@@ -276,7 +298,7 @@ def update_movie(request, title):
             elif searched_movies.count() > 1:
                 return render(request, 'search.html', {'movies': searched_movies})
     else:
-        add_movie_form = AddMovieForm
+        update_movie_form = AddMovieForm
         return render(request, 'addmovie.html', {'navbar': 'addmovie', 'add_movie_form': update_movie_form})
 
 
@@ -301,9 +323,26 @@ def delete_movie(request, title):
     return render(request, 'delete.html', {'title': title, 'movie': movie})
 
 
+@login_required
 def addreview(request, title):
-    if request.method == 'POST':
+    movie = Movie.objects.get(title=title)
+    if request.user:
+        user = User.objects.get(username=request.user)
+        print(user)
+    if request.method == 'POST' and "add_review_btn" in request.POST:
         reviewform = ReviewForm(data=request.POST)
-    else:
-        reviewform = ReviewForm()
+        if reviewform.is_valid():
+            review = reviewform.save(commit=False)
+            review.movie = movie
+            review.user = user
+            review.save()
+            print(review)
+            return redirect('/movies/'+title)
+
+    reviewform = ReviewForm()
+
     return render(request, 'reviewform.html', {'reviewform': reviewform})
+
+
+def user_profile(request):
+    return render(request, 'profile.html', {})

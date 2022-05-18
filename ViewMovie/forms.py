@@ -1,6 +1,6 @@
 from re import M
 from django import forms
-from django.forms import CheckboxInput, ModelForm, TextInput, Textarea, Select, PasswordInput, DateInput, SelectMultiple, MultipleChoiceField
+from django.forms import NumberInput, ModelForm, TextInput, Textarea, Select, PasswordInput, DateInput, SelectMultiple, MultipleChoiceField
 from django.contrib.auth.models import User
 from ViewMovie.models import Movie, Review, UserInfo
 
@@ -36,14 +36,6 @@ class UserInfoForm(forms.ModelForm):
 
             })
         }
-
-
-class UserLogInForm(ModelForm):
-    password = forms.CharField(widget=PasswordInput())
-
-    class Meta():
-        model = User
-        fields = ('username', 'password')
 
 
 class AddMovieForm(ModelForm):
@@ -112,5 +104,24 @@ class ReviewForm(ModelForm):
 
     class Meta():
         model = Review
-        fields = ('full_review', 'review_score',
-                  'review_summary', 'movie', 'user')
+        fields = ('review_score',
+                  'review_summary', 'full_review')
+
+        widgets = {
+            'review_score': NumberInput(attrs={
+                'class': 'form-control',
+                'style': 'margin-top:10px',
+                'min': 0,
+                'max': 10,
+            }),
+            'review_summary': TextInput(attrs={
+                'class': 'form-control',
+                'style': 'margin-top:10px'
+            }),
+            'full_review': Textarea(attrs={
+                'class': 'form-control',
+                'style': 'height:100px; margin-top:10px;',
+                'rows': 5,
+                'cols': 100
+            })
+        }
