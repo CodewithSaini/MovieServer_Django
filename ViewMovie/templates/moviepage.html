@@ -6,14 +6,14 @@
   <a type="button" class="btn btn-danger" name="delete_btn" href="{% url 'delete' movie.title %}" style="float:right; margin-left:10px">Delete</a>
   <a type="button" class="btn btn-success" name="update_btn" href="{% url 'update' movie.title %}" style="float:right">Update</a>
   
-  <h1>{{movie.title| title}} ({{movie.released.year}})</h1>
+  <h1>{{movie.title| title}} <small style="font-size:16px">({{movie.released.year}})</small></h1>
   
   <hr />
   <img  src="{{movie.poster}}" alt="no image found" style="width:350px; height:450px"></img>
   <div style="float:right; width:800px; height:450px;">
     <h6>{{movie.genre | capfirst }}</h6>
     <h5>{{movie.released}}</h5>
-    <p>{{movie.plot}}</p>
+    <p>{{movie.time}}</p>
     <ul>
       {% for actor in actors %}
       <li>{{actor | title}}</li>

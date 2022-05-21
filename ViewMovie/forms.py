@@ -44,7 +44,7 @@ class AddMovieForm(ModelForm):
 
         model = Movie
         fields = ('title', 'released', 'rated', 'plot', 'genre', 'actors',
-                  'directors', 'runtime', 'writers', 'poster', 'awards')
+                  'directors', 'runtime', 'collection', 'writers', 'poster', 'awards')
 
         widgets = {
             'title': TextInput(attrs={
@@ -63,6 +63,10 @@ class AddMovieForm(ModelForm):
             'genre': SelectMultiple(attrs={
                 'class': 'form-select'
             }),
+            'collection': TextInput(attrs={
+                'class': 'form-control'
+            }),
+
             'runtime': TextInput(attrs={
                 'class': 'form-control',
 
@@ -72,9 +76,7 @@ class AddMovieForm(ModelForm):
                 'style': 'height:92px',
                 'rows': 5,
                 'cols': 100,
-
             }),
-
 
             'actors': TextInput(attrs={
                 'class': 'form-control',

@@ -1,4 +1,6 @@
+from datetime import datetime
 from tkinter import CASCADE
+from unicodedata import category
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import CheckboxSelectMultiple
@@ -12,6 +14,7 @@ from multiselectfield import MultiSelectField
 
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username
@@ -51,6 +54,9 @@ class Movie(models.Model):
     writers = models.CharField(max_length=200, null=True, blank=True)
     awards = models.CharField(max_length=200, null=True, blank=True)
     poster = models.URLField(null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    collection = models.CharField(blank=True, default=0, max_length=20)
+    time = models.DateTimeField()
 
     def __str__(self):
         return self.title + "-"+str(self.id)
@@ -62,6 +68,17 @@ class Review(models.Model):
     full_review = models.TextField(max_length=300, blank=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    time = models.DateTimeField()
 
     def __str__(self):
-        return str(self.review_score)+"-"+self.review_summary+"-"+str(self.id)
+        return str(self.review_score)+"-"+self.review_summary
+
+
+class Notifications(models.Model):
+    text = models.TextField(max_length=255)
+    category = models.CharField(max_length=20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    time = models.DateTimeField()
+
+    def __str__(self):
+        return self.category

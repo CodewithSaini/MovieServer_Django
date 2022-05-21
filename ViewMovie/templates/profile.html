@@ -3,7 +3,47 @@
 {% endblock title %} {% block content %}
 <div class="container" style="margin-top: 80px">
   {% if user.is_authenticated %}
-  <h1>{{user}}</h1>
+  <h1>{{user.first_name|title}} {{user.last_name|title}}</h1>
+  <hr />
+
+  <div class="row justify-content-evenly">
+    <div class="col-3" style="height: 600px">
+      <div
+        class="row col-13 align-items-start"
+        style="
+          height: 350px;
+          margin-bottom: 15px;
+          border: 1px solid black;
+          border-radius: 2%;
+        "
+      >
+        <h3 style="text-align: center">Movie Added</h3>
+        {% for movie in movies %}
+        <a href="{% url 'one_movie' movie.title %}">{{movie.title}}</a>
+        {% endfor %}
+      </div>
+      <div
+        class="row col-13"
+        style="height: 235px; border: 1px solid black; border-radius: 2%"
+      >
+        <h3 style="text-align: center">Watchlist</h3>
+      </div>
+    </div>
+
+    <div
+      class="col-5"
+      style="height: 600px; border: 1px solid black; border-radius: 2%"
+    >
+      <h3 style="text-align: center">Timeline</h3>
+    </div>
+    <div
+      class="col-3"
+      style="height: 600px; border: 1px solid black; border-radius: 2%"
+    >
+      <h3 style="text-align: center">Notifications</h3>
+    </div>
+  </div>
+
   {% endif %}
 </div>
 {% endblock content%}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %} {% block title %}
+<title>Login Required</title>
+{% endblock title %} {% block content %}
+<div class="container" style="margin-top: 80px">
+  <h4>
+    This action required login. Please login here
+    <a href="{% url 'login' %}">Login</a>
+  </h4>
+</div>
+{% endblock content %}

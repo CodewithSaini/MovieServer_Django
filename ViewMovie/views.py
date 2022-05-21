@@ -1,6 +1,8 @@
 import datetime
+import pytz
 from datetime import date
 from datetime import timedelta
+from time import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
@@ -112,6 +114,28 @@ def log_user_out(request):
     return redirect('login')
 
 
+def top_50_movies(request):
+    s_title = request.POST.get('search_title', "")
+    searched_movies = search_movie(s_title)
+    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+        if searched_movies == 'no movie':
+            return redirect('/')
+        else:
+            if searched_movies.count() == 1:
+                print("hi")
+                return render(request, 'search.html', {'movies': searched_movies})
+            elif searched_movies.count() > 1:
+                return render(request, 'search.html', {'movies': searched_movies})
+
+    content = Movie.objects.all().order_by("-collection")[:50]
+    paginator = Paginator(content, 25)  # Show 25 contacts per page.
+    print(content.count())
+    page_number = request.GET.get('page')
+    movies = paginator.get_page(page_number)
+    nums = "x"*movies.paginator.num_pages
+    return render(request, 'top50.html', {'movies': movies, 'nums': nums})
+
+
 def just_released(request):
     s_title = request.POST.get('search_title', "")
     searched_movies = search_movie(s_title)
@@ -220,31 +244,49 @@ def movie_page(request, title):
 
 
 def add_movie(request):
-    print(request.POST)
-    s_title = request.POST.get('search_title', "")
-    searched_movies = search_movie(s_title)
-    if request.method == 'POST' and "add_movie_btn" in request.POST:
-        add_movie_form = AddMovieForm(data=request.POST)
-        if add_movie_form.is_valid():
-            add_movie_form.save()
-            print("Movie is added to the database.")
-            return redirect('movies')
-        else:
-            print("hi")
-            print(add_movie_form.errors.as_data())
-
-    if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
-        if searched_movies == 'no movie':
-            return redirect('/')
-        else:
-            if searched_movies.count() == 1:
+    if request.user.is_authenticated:
+        print(request.POST)
+        s_title = request.POST.get('search_title', "")
+        searched_movies = search_movie(s_title)
+        if request.method == 'POST' and "add_movie_btn" in request.POST:
+            add_movie_form = AddMovieForm(data=request.POST)
+            if add_movie_form.is_valid():
+                new_movie = add_movie_form.save(commit=False)
+                new_movie.user = request.user
+                new_movie.time = datetime.datetime.now(
+                    pytz.timezone('EST'))
+                new_movie.save()
+                print("Movie is added to the database.")
+                return redirect('movies')
+            else:
                 print("hi")
-                return render(request, 'search.html', {'movies': searched_movies})
-            elif searched_movies.count() > 1:
-                return render(request, 'search.html', {'movies': searched_movies})
+                print(add_movie_form.errors.as_data())
+
+        if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+            if searched_movies == 'no movie':
+                return redirect('/')
+            else:
+                if searched_movies.count() == 1:
+                    print("hi")
+                    return render(request, 'search.html', {'movies': searched_movies})
+                elif searched_movies.count() > 1:
+                    return render(request, 'search.html', {'movies': searched_movies})
+        else:
+            add_movie_form = AddMovieForm
+            return render(request, 'addmovie.html', {'navbar': 'addmovie', 'add_movie_form': add_movie_form})
     else:
-        add_movie_form = AddMovieForm
-        return render(request, 'addmovie.html', {'navbar': 'addmovie', 'add_movie_form': add_movie_form})
+        s_title = request.POST.get('search_title', "")
+        searched_movies = search_movie(s_title)
+        if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+            if searched_movies == 'no movie':
+                return redirect('/')
+            else:
+                if searched_movies.count() == 1:
+                    print("hi")
+                    return render(request, 'search.html', {'movies': searched_movies})
+                elif searched_movies.count() > 1:
+                    return render(request, 'search.html', {'movies': searched_movies})
+        return render(request, 'loginrequired.html', {})
 
 
 def register(request):
@@ -323,26 +365,43 @@ def delete_movie(request, title):
     return render(request, 'delete.html', {'title': title, 'movie': movie})
 
 
-@login_required
 def addreview(request, title):
-    movie = Movie.objects.get(title=title)
-    if request.user:
-        user = User.objects.get(username=request.user)
-        print(user)
-    if request.method == 'POST' and "add_review_btn" in request.POST:
-        reviewform = ReviewForm(data=request.POST)
-        if reviewform.is_valid():
-            review = reviewform.save(commit=False)
-            review.movie = movie
-            review.user = user
-            review.save()
-            print(review)
-            return redirect('/movies/'+title)
+    if request.user.is_authenticated:
+        movie = Movie.objects.get(title=title)
+        if request.user:
+            user = User.objects.get(username=request.user)
+            print(user)
+        if request.method == 'POST' and "add_review_btn" in request.POST:
+            reviewform = ReviewForm(data=request.POST)
+            if reviewform.is_valid():
+                review = reviewform.save(commit=False)
+                review.movie = movie
+                review.user = user
+                review.time = datetime.datetime.now(
+                    pytz.timezone('EST'))
+                review.save()
+                print(review)
+                return redirect('/movies/'+title)
 
-    reviewform = ReviewForm()
+        reviewform = ReviewForm()
 
-    return render(request, 'reviewform.html', {'reviewform': reviewform})
+        return render(request, 'reviewform.html', {'reviewform': reviewform})
+    else:
+        s_title = request.POST.get('search_title', "")
+        searched_movies = search_movie(s_title)
+        if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+            if searched_movies == 'no movie':
+                return redirect('/')
+            else:
+                if searched_movies.count() == 1:
+                    print("hi")
+                    return render(request, 'search.html', {'movies': searched_movies})
+                elif searched_movies.count() > 1:
+                    return render(request, 'search.html', {'movies': searched_movies})
+        return render(request, 'loginrequired.html', {})
 
 
 def user_profile(request):
-    return render(request, 'profile.html', {})
+    movies_added = Movie.objects.all().filter(user=request.user).order_by('-time')
+
+    return render(request, 'profile.html', {'movies': movies_added})

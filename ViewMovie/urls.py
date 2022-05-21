@@ -9,6 +9,7 @@ urlpatterns = [
     path('user/login/', views.log_user_in, name="login"),
     path('user/logout/', views.log_user_out, name="logout"),
     path('user/profile/', views.user_profile, name="profile"),
+    path('top50/', views.top_50_movies, name="top50"),
     path('justreleased/', views.just_released, name="justreleased"),
     path('commingsoon/', views.comming_soon, name="commingsoon"),
     path('bygenre/', views.movie_by_genre, name="bygenre"),
