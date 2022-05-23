@@ -74,11 +74,10 @@ class Review(models.Model):
         return str(self.review_score)+"-"+self.review_summary
 
 
-class Notifications(models.Model):
-    text = models.TextField(max_length=255)
-    category = models.CharField(max_length=20)
+class WatchList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     time = models.DateTimeField()
 
     def __str__(self):
-        return self.category
+        return self.user.username
