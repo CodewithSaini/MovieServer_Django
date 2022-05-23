@@ -1,4 +1,6 @@
+from collections import namedtuple
 import datetime
+from django.template.defaulttags import register
 import pytz
 from datetime import date
 from datetime import timedelta
@@ -11,6 +13,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from ViewMovie.forms import UserInfoForm, AddMovieForm, ReviewForm
 from ViewMovie.models import Movie, Review, UserInfo, User
 from django.contrib import messages
+from .helper_function import get_event_date
 # Create your views here.
 
 
@@ -403,5 +406,9 @@ def addreview(request, title):
 
 def user_profile(request):
     movies_added = Movie.objects.all().filter(user=request.user).order_by('-time')
+    print(movies_added)
+    movie_event_time = {}
+    for movie in movies_added:
+        movie.event_time = get_event_date(movie.time)
 
     return render(request, 'profile.html', {'movies': movies_added})

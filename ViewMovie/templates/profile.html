@@ -3,47 +3,72 @@
 {% endblock title %} {% block content %}
 <div class="container" style="margin-top: 80px">
   {% if user.is_authenticated %}
-  <h1>{{user.first_name|title}} {{user.last_name|title}}</h1>
+  <h1>{{user.first_name|title}} {{user.last_name|title}}<small style="font-size:14px"> (Since {{user.date_joined.year}})</small></h1>
   <hr />
 
   <div class="row justify-content-evenly">
     <div class="col-3" style="height: 600px">
       <div
-        class="row col-13 align-items-start"
+        class="col"
         style="
+          background-color:white;
           height: 350px;
+          width:330px;
           margin-bottom: 15px;
-          border: 1px solid black;
+          border: 1px solid ;
           border-radius: 2%;
         "
       >
-        <h3 style="text-align: center">Movie Added</h3>
-        {% for movie in movies %}
-        <a href="{% url 'one_movie' movie.title %}">{{movie.title}}</a>
-        {% endfor %}
+        <h3 style="text-align: center; margin:15px">Movie Added</h3>     
+          <div>
+            <ul>
+              {% for movie in movies %}
+                <li>
+                  <a href="{% url 'one_movie' movie.title %}">{{movie.title}}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>     
+        </div>
+        <div
+          class="col-13"
+          style="height: 235px; background-color:white;
+          border: 1px solid black; border-radius: 2%"
+        >
+          <h3 style="text-align: center; margin:15px">Watchlist</h3>
+          
+        </div>
+      </div>
+
+      <div
+        class="col-6"
+        style="height: 600px; background-color:white; border: 1px solid black; border-radius: 1%;
+        overflow-y:auto; overflow-x:hidden"
+      >
+        <h3 style="text-align: center; margin:15px">Timeline</h3>
+        <div style="margin:15px">
+          {% for movie in movies %}
+            <p style="font-size:18px">{{request.user}} added a movie new movie. </p>
+            <div class="card" style="width: 18rem; margin-left:20px;">
+              <a href="{% url 'one_movie' movie.title %}"><img  src="{{movie.poster}}" class="card-img-top" alt="..."></a>
+              <div class="card-body">
+                <h5 class="card-title">{{movie.title}}</h5>
+              </div>
+            </div>
+            <small style="font-size:12px">{{movie.event_time}}</small>
+            <hr>      
+          {% endfor %}
+        </div>
       </div>
       <div
-        class="row col-13"
-        style="height: 235px; border: 1px solid black; border-radius: 2%"
+        class="col-3"
+        style="height: 600px; background-color:white; margin-left:10px; width: 290px; border: 1px solid black; border-radius: 2%"
       >
-        <h3 style="text-align: center">Watchlist</h3>
+        <h3 style="text-align: center; margin:15px ">Reviews</h3>
       </div>
     </div>
 
-    <div
-      class="col-5"
-      style="height: 600px; border: 1px solid black; border-radius: 2%"
-    >
-      <h3 style="text-align: center">Timeline</h3>
-    </div>
-    <div
-      class="col-3"
-      style="height: 600px; border: 1px solid black; border-radius: 2%"
-    >
-      <h3 style="text-align: center">Notifications</h3>
-    </div>
+    {% endif %}
   </div>
-
-  {% endif %}
+  {% endblock content%}
 </div>
-{% endblock content%}
