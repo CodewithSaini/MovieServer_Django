@@ -7,34 +7,45 @@
   <a type="button" class="btn btn-success" name="update_btn" href="{% url 'update' movie.title %}" style="float:right">Edit</a>
   
   <h1>{{movie.title| title}} <small style="font-size:16px">({{movie.released.year}})</small></h1>
-  
-  <br />
-  <img  src="{{movie.poster}}" alt="no image found" style="width:350px; height:450px"></img>
+  <h6 style="float:right">Rated: {{movie.rated}}</h6>
+  <h4 style="margin-top:15px; margin-bottom:15px;">Runtime: {{hour}}h {{min}}m</h4>
+  <p><b>Plot - </b>{{movie.plot}}</p>
   <br>
-  {% if in_watchlist == False %}
-  <form method='POST'>
-    {% csrf_token %}
-    <button name="add_to_watchlist"  class="btn btn-light"><i class="bi bi-plus-square-fill"></i> Watchlist</button>
-  </form>
-  {% else %}
-  <form method='POST'>
-    {% csrf_token %}
-    <button name="remove_from_watchlist"  class="btn btn-light">Remove From Watchlist</button>
-  </form>
-  {% endif %}
-  
-  <div style="float:right; width:800px; height:450px;">
-    <h6>{{movie.genre | capfirst }}</h6>
-    <h5>{{movie.released}}</h5>
-    <p>{{movie.plot}}</p>
-    <ul>
-      {% for actor in actors %}
-      <li>{{actor | title}}</li>
-      {% endfor %}
-    </ul>
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+        <img  src="{{movie.poster}}" alt="{{movie.title}}" style="width:350px; border-radius: 1%; height:450px"></img>
+        <br>
+        {% if in_watchlist == False %}
+        <form method='POST'>
+          {% csrf_token %}
+          <button name="add_to_watchlist" style="margin-top:10px; padding: 12px 105px" class="btn btn-warning"><i class="bi bi-plus-square-fill"></i> Add to Watchlist</button>
+        </form>
+        {% else %}
+        <form method='POST'>
+          {% csrf_token %}
+          <button name="remove_from_watchlist" style="margin-top:10px; padding: 12px 89px" class="btn btn-danger">Remove From Watchlist</button>
+        </form>
+        {% endif %}
+      </div>
+      <div class="col-8" style="border: 1px solid #b5b9cc; text-color:white; background-color:#212428; border-radius:1%">
+        <h5 style="color:white; margin-left:15px; margin-top:15px">Released: <span style="font-size:18px; font-weight:normal">{{movie.released}}</span></h5>
+        <hr style="color:white;">
+        <h5 style="color:white; display:inline-block; margin-left:15px;">Genre: </h5>
+        {% for genre in movie.genre %}
+          <button class="button" style="margin-right:0px; margin-left:15px; color:white; background-color:#212428; padding: 6px 15px; border: 2px solid white; border-radius: 6px;">{{genre}}</button>
+        {% endfor %}
+        <hr style="color:white;">
+        <h5 style="color:white; margin-left:15px;">Directors: <span style="font-size:18px; font-weight:normal">{{movie.directors}}</span></h5>
+        <hr style="color:white;">
+        <h5 style="color:white; margin-left:15px;">Writers: <span style="font-size:18px; font-weight:normal">{{movie.writers}}</span></h5>
+        <hr style="color:white;">
+      </div>
+      
   </div>
-  <hr>
-  <div class="review">
+    <br/>
+    <div class="review">
+      <br/>
     {% if movie.title %}
       <h3>Reviews:</h3>
       <a href="{% url 'reviewform' movie.title %}"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
@@ -46,7 +57,7 @@
       <p>{{review.review_score}}-{{review.review_summary}}</p>
       {% endfor %}
     {% endif %}
-  </div>
+    </div>
 </div>
 
 {% endblock content %}

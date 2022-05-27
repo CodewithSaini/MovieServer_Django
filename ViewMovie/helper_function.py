@@ -1,42 +1,40 @@
-from datetime import datetime
+from datetime import datetime, tzinfo
 
 
-def get_event_date(date):
-    today = datetime.now()
-    if today.year - date.year <= 0:
-        if today.month - date.month <= 0:
-            if today.day - date.day <= 0:
-                if today.hour - date.hour <= 0:
-                    if today.minute - date.minute <= 0:
-                        if today.second - date.second <= 0:
-                            return "Just Now"
-                        else:
-                            if today.second - date.second == 1:
-                                return "{} second ago".format(today.second - date.second)
-                            else:
-                                return "{} seconds ago".format(today.second - date.second)
-                    else:
-                        if today.minute - date.minute == 1:
-                            return "{} minute ago".format(today.minute - date.minute)
-                        else:
-                            return "{} minutes ago".format(today.minute - date.minute)
-                else:
-                    if today.hour - date.hour == 1:
-                        return "{} hour ago".format(today.hour - date.hour)
-                    else:
-                        return "{} hours ago".format(today.hour - date.hour)
-            else:
-                if today.day - date.day == 1:
-                    return "{} day ago".format(today.day - date.day)
-                else:
-                    return "{} days ago".format(today.day - date.day)
-        else:
-            if today.month - date.month == 1:
-                return "{} month ago".format(today.month - date.month)
-            else:
-                return "{} months ago".format(today.month - date.month)
-    else:
-        if today.year - date.year == 1:
-            return "{} year ago".format(today.year - date.year)
-        else:
-            return "{} years ago".format(today.year - date.year)
+def get_event_date(time):
+
+    now = datetime.now()
+    if type(time) is int:
+        diff = now - datetime.fromtimestamp(time)
+    elif isinstance(time, datetime):
+        diff = now - time
+    elif not time:
+        diff = 0
+    second_diff = diff.seconds
+    day_diff = diff.days
+
+    if day_diff < 0:
+        return ''
+
+    if day_diff == 0:
+        if second_diff < 10:
+            return "just now"
+        if second_diff < 60:
+            return str(second_diff) + " seconds ago"
+        if second_diff < 120:
+            return "a minute ago"
+        if second_diff < 3600:
+            return str(second_diff // 60) + " minutes ago"
+        if second_diff < 7200:
+            return "an hour ago"
+        if second_diff < 86400:
+            return str(second_diff // 3600) + " hours ago"
+    if day_diff == 1:
+        return "Yesterday"
+    if day_diff < 7:
+        return str(day_diff) + " days ago"
+    if day_diff < 31:
+        return str(day_diff // 7) + " weeks ago"
+    if day_diff < 365:
+        return str(day_diff // 30) + " months ago"
+    return str(day_diff // 365) + " years ago"

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -112,7 +113,7 @@ TIME_ZONE = 'Canada/Eastern'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -127,3 +128,11 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'ViewMovie/static'),)
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGOUT_REDIRECT_URL = reverse_lazy('login')
+# opional, as this will log you out when browser is closed
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# 0r 5 * 60, same thing
+SESSION_COOKIE_AGE = 30*60
+# Will prrevent from logging you out after 300 seconds
+SESSION_SAVE_EVERY_REQUEST = True

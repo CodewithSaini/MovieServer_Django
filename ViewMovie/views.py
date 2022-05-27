@@ -1,8 +1,11 @@
 from collections import namedtuple
 import datetime
+from itertools import chain
+from operator import attrgetter
+from django.utils import timezone
+from sqlite3 import Date
 from django.template.defaulttags import register
-import pytz
-from datetime import date
+from datetime import date, tzinfo
 from datetime import timedelta
 from time import timezone
 from django.contrib.auth.decorators import login_required
@@ -233,18 +236,18 @@ def movie_page(request, title):
             return redirect('/')
         else:
             if searched_movies.count() == 1:
-                print("hi")
                 return render(request, 'search.html', {'movies': searched_movies})
             elif searched_movies.count() > 1:
                 return render(request, 'search.html', {'movies': searched_movies})
 
     movie = Movie.objects.get(title=title)
+    run_hour = movie.runtime//60
+    run_min = movie.runtime % 60
     reviews = Review.objects.filter(movie=movie)
     # print(reviews)
     actor = movie.actors.split(", ")
     # print(request.POST)
 #############################add to watchlist ###################################################
-    time_now = datetime.datetime.now()
     if request.user.is_authenticated:
         already_in_watchlist = WatchList.objects.all().filter(
             user=request.user, movie=movie)
@@ -254,15 +257,34 @@ def movie_page(request, title):
             in_watchlist = False
             if user_watchlist.count() < 5 and request.method == 'POST' and "add_to_watchlist" in request.POST:
                 watchlist_movie = WatchList(
-                    user=request.user, movie=movie, time=time_now)
+                    user=request.user, movie=movie)
                 watchlist_movie.save()
+                in_watchlist = True
             else:
                 print("Watchlist Full!")
         else:
             in_watchlist = True
             print("Movie is already in User's Watchlist!")
-##################################################################################################
-    return render(request, 'moviepage.html', {"movie": movie, 'actors': actor, 'reviews': reviews, 'in_watchlist': in_watchlist})
+            if already_in_watchlist and request.method == 'POST' and "remove_from_watchlist" in request.POST:
+                already_in_watchlist.delete()
+                in_watchlist = False
+            else:
+                print("Movie is not in your Watchlist!")
+    elif not request.user.is_authenticated and "add_to_watchlist" in request.POST:
+        s_title = request.POST.get('search_title', "")
+        searched_movies = search_movie(s_title)
+        if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
+            if searched_movies == 'no movie':
+                return redirect('/')
+            else:
+                if searched_movies.count() == 1:
+                    print("hi")
+                    return render(request, 'search.html', {'movies': searched_movies})
+                elif searched_movies.count() > 1:
+                    return render(request, 'search.html', {'movies': searched_movies})
+        return render(request, 'loginrequired.html', {})
+
+    return render(request, 'moviepage.html', {"hour": run_hour, "min": run_min, "movie": movie, 'actors': actor, 'reviews': reviews, 'in_watchlist': in_watchlist})
 
 
 def add_movie(request):
@@ -275,12 +297,10 @@ def add_movie(request):
             if add_movie_form.is_valid():
                 new_movie = add_movie_form.save(commit=False)
                 new_movie.user = request.user
-                new_movie.time = datetime.datetime.now()
                 new_movie.save()
                 print("Movie is added to the database.")
                 return redirect('movies')
             else:
-                print("hi")
                 print(add_movie_form.errors.as_data())
 
         if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
@@ -426,8 +446,6 @@ def addreview(request, title):
                 review = reviewform.save(commit=False)
                 review.movie = movie
                 review.user = user
-                review.time = datetime.datetime.now(
-                    pytz.timezone('EST'))
                 review.save()
                 print(review)
                 return redirect('/movies/'+title)
@@ -451,11 +469,24 @@ def addreview(request, title):
 
 
 def user_profile(request):
-    movies_added = Movie.objects.all().filter(user=request.user).order_by('-time')
-    watchlist_movie = WatchList.objects.all().filter(
-        user=request.user)
+    if request.user.is_authenticated:
+        current_user_movies = Movie.objects.all().filter(
+            user=request.user).order_by('title')
+        current_user_reviews = Review.objects.all().filter(
+            user=request.user).order_by('-time')
+        current_user_watchlist = WatchList.objects.all().filter(
+            user=request.user)
+        movies_added = Movie.objects.all()
+        reviews = Review.objects.all()
+        sorted_timeline = sorted(
+            chain(movies_added, reviews), key=attrgetter('time'), reverse=True)
 
-    for movie in movies_added:
-        movie.event_time = get_event_date(movie.time)
+        for obj in sorted_timeline:
+            obj.event_time = get_event_date(obj.time)
+            if hasattr(obj, "title"):
+                obj.type = "movie"
+            print(obj.event_time)
 
-    return render(request, 'profile.html', {'movies': movies_added, 'watchlist': watchlist_movie})
+    else:
+        return redirect('login')
+    return render(request, 'profile.html', {'timeline': sorted_timeline, 'movies': current_user_movies, 'watchlist': current_user_watchlist, 'reviews': current_user_reviews})
