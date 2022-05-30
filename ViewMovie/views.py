@@ -229,6 +229,7 @@ def one_genre_movies(request, genre):
 
 def movie_page(request, title):
     in_watchlist = False
+    average_rating = 0
     s_title = request.POST.get('search_title', "")
     searched_movies = search_movie(s_title)
     if request.method == "POST" and searched_movies != 0 and "search_btn" in request.POST:
@@ -241,12 +242,17 @@ def movie_page(request, title):
                 return render(request, 'search.html', {'movies': searched_movies})
 
     movie = Movie.objects.get(title=title)
-    run_hour = movie.runtime//60
-    run_min = movie.runtime % 60
-    reviews = Review.objects.filter(movie=movie)
-    # print(reviews)
+    if movie.runtime:
+        run_hour = movie.runtime//60
+        run_min = movie.runtime % 60
+    reviews = Review.objects.filter(movie=movie).order_by('-time')
+    if reviews.count() > 0:
+        for review in reviews:
+            average_rating += review.review_score
+        average_rating = round(average_rating/reviews.count(), 1)
+    m_writers = movie.writers.split(", ")
     actor = movie.actors.split(", ")
-    # print(request.POST)
+    m_directors = movie.directors.split(", ")
 #############################add to watchlist ###################################################
     if request.user.is_authenticated:
         already_in_watchlist = WatchList.objects.all().filter(
@@ -270,6 +276,18 @@ def movie_page(request, title):
                 in_watchlist = False
             else:
                 print("Movie is not in your Watchlist!")
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            for fields in request.POST:
+                if fields.startswith("moviepagereview"):
+                    r_movie_title = fields.split(",")[1]
+                    r_movie = Movie.objects.get(title=r_movie_title)
+                    f_review = fields.split(",")[2]
+                    review_to_be_deleted = Review.objects.get(
+                        movie=r_movie, user=request.user, full_review=f_review)
+                    if review_to_be_deleted:
+                        review_to_be_deleted.delete()
+                        return redirect("/movies/"+str(title))
     elif not request.user.is_authenticated and "add_to_watchlist" in request.POST:
         s_title = request.POST.get('search_title', "")
         searched_movies = search_movie(s_title)
@@ -284,7 +302,7 @@ def movie_page(request, title):
                     return render(request, 'search.html', {'movies': searched_movies})
         return render(request, 'loginrequired.html', {})
 
-    return render(request, 'moviepage.html', {"hour": run_hour, "min": run_min, "movie": movie, 'actors': actor, 'reviews': reviews, 'in_watchlist': in_watchlist})
+    return render(request, 'moviepage.html', {"directors": m_directors, "average_rating": average_rating, "writers": m_writers, "hour": run_hour, "min": run_min, "movie": movie, 'actors': actor, 'reviews': reviews, 'in_watchlist': in_watchlist})
 
 
 def add_movie(request):
@@ -452,7 +470,7 @@ def addreview(request, title):
 
         reviewform = ReviewForm()
 
-        return render(request, 'reviewform.html', {'reviewform': reviewform})
+        return render(request, 'reviewform.html', {'reviewform': reviewform, 'title': title})
     else:
         s_title = request.POST.get('search_title', "")
         searched_movies = search_movie(s_title)
@@ -465,7 +483,7 @@ def addreview(request, title):
                     return render(request, 'search.html', {'movies': searched_movies})
                 elif searched_movies.count() > 1:
                     return render(request, 'search.html', {'movies': searched_movies})
-        return render(request, 'loginrequired.html', {})
+        return render(request, 'loginrequired.html', {'title': title})
 
 
 def user_profile(request):
@@ -480,12 +498,30 @@ def user_profile(request):
         reviews = Review.objects.all()
         sorted_timeline = sorted(
             chain(movies_added, reviews), key=attrgetter('time'), reverse=True)
-
+        if request.method == "POST":
+            for fields in request.POST:
+                if fields.startswith('review'):
+                    f_review = fields.split(",")[1]
+                    r_movie = fields.split(',')[2]
+                    print(f_review)
+                    print(r_movie)
+                    review_movie = Movie.objects.get(title=r_movie)
+                    review_to_be_deleted = Review.objects.get(
+                        full_review=f_review, movie=review_movie, user=request.user)
+                    print(review_to_be_deleted)
+                    review_to_be_deleted.delete()
+                elif fields.startswith('watchlist'):
+                    m_title = fields.split(',')[1]
+                    w_movie = Movie.objects.get(title=m_title)
+                    watchlist_movie_to_be_deleted = WatchList.objects.get(
+                        movie=w_movie, user=request.user)
+                    if watchlist_movie_to_be_deleted:
+                        watchlist_movie_to_be_deleted.delete()
         for obj in sorted_timeline:
             obj.event_time = get_event_date(obj.time)
             if hasattr(obj, "title"):
                 obj.type = "movie"
-            print(obj.event_time)
+            # print(obj.event_time)
 
     else:
         return redirect('login')

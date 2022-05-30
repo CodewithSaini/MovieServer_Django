@@ -28,35 +28,63 @@
         </form>
         {% endif %}
       </div>
-      <div class="col-8" style="border: 1px solid #b5b9cc; text-color:white; background-color:#212428; border-radius:1%">
-        <h5 style="color:white; margin-left:15px; margin-top:15px">Released: <span style="font-size:18px; font-weight:normal">{{movie.released}}</span></h5>
-        <hr style="color:white;">
-        <h5 style="color:white; display:inline-block; margin-left:15px;">Genre: </h5>
+      <div class="col-8" style="border: 1px solid #b5b9cc; text-color:#ba86fc; background-color:#212428; border-radius:1%">
+        <h5 style="color:#ffffff; margin-left:15px; margin-bottom:20px; margin-top:30px">Released: <span style="font-size:18px; color:#ba86fc; margin-left:15px; font-weight:normal">{{movie.released}}</span></h5>
+        <hr style="color:#ffffff;">
+        <h5 style="color:#ffffff; display:inline-block; margin-left:15px;">Genre: </h5>
         {% for genre in movie.genre %}
-          <button class="button" style="margin-right:0px; margin-left:15px; color:white; background-color:#212428; padding: 6px 15px; border: 2px solid white; border-radius: 6px;">{{genre}}</button>
+          <a href="{% url 'one_genre' genre %}"><button class="button" style="margin-left:15px; color:#ba86fc; background-color:#212428; padding: 6px 15px; border: 2px solid #ba86fc; border-radius: 6px;">{{genre}}</button></a>
         {% endfor %}
-        <hr style="color:white;">
-        <h5 style="color:white; margin-left:15px;">Directors: <span style="font-size:18px; font-weight:normal">{{movie.directors}}</span></h5>
-        <hr style="color:white;">
-        <h5 style="color:white; margin-left:15px;">Writers: <span style="font-size:18px; font-weight:normal">{{movie.writers}}</span></h5>
-        <hr style="color:white;">
+        <hr style="color:#ffffff;">
+        <h5 style="color:#ffffff; display:inline-block; margin-bootom:5px; margin-left:15px;">Directors: </h5>
+        {% for director in directors %}
+          <h5 style="display:inline-block;"><span style="font-size:18px; color:#ba86fc; display:inline-block; margin-left:15px;font-weight:normal">{{director}}</span></h5>
+        {% endfor %}
+        <hr style="color:#ffffff;">
+        <h5 style="color:#ffffff; display:inline-block; margin-left:15px;">Writers: </h5>
+        {% for writer in writers %}
+          <h5 style="display:inline-block;"><span style="font-size:18px; color:#ba86fc; display:inline-block; margin-left:15px;font-weight:normal">{{writer}}</span></h5>
+        {% endfor %}
+        <hr style="color:#ffffff;">
+        <h5 style="color:#ffffff; display:inline-block; margin-left:15px;">Actors: </h5>
+        {% for actor in actors %}
+          <h5 style="display:inline-block;"><span style="font-size:18px; color:#ba86fc; display:inline-block; margin-left:15px;font-weight:normal">{{actor}}</span></h5>
+        {% endfor %}
+        <hr style="color:#ffffff;">
+        <h5 style="color:#ffffff; margin-left:15px; margin-bottom:20px; margin-top:20px">Collection: <span style="font-size:18px; color:#ba86fc; margin-left:15px;font-weight:normal">{{movie.collection}}</span></h5>
+        <hr style="color:#ffffff;">
       </div>
       
   </div>
-    <br/>
-    <div class="review">
-      <br/>
-    {% if movie.title %}
-      <h3>Reviews:</h3>
-      <a href="{% url 'reviewform' movie.title %}"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
-        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
-      </svg></i></a>
-      <br>
-      {% for review in reviews %}
-      <small><strong>{{review.user}}</strong></small>
-      <p>{{review.review_score}}-{{review.review_summary}}</p>
-      {% endfor %}
-    {% endif %}
+    <br>
+    <h3 style="margin-left:10px;">Similar Movies</h3>
+    <div class="col-13" style="margin-left:10px; height:300px; border: 1px solid gray; border-radius:8px; background-color: #ffffff">
+    <p>similar movie will go here</p>
+    </div>
+    <br>
+    <div class="col-13" style="margin-left:10px; {% if reviews %} height:700px; {% else %} height: 60px; {% endif %}overflow-y:auto; overflow-x:hidden; border: 1px solid gray; border-radius:8px; background-color: #ffffff">
+      <div class="container" >
+        <a href="{% url 'reviewform' movie.title %}"><button class="btn btn-dark" style="margin:10px; float:right"><i class="bi bi-bookmark-plus"></i> Add Review</button></a>
+        {% if reviews  %}
+          <h2 style="margin:20px;">Reviews:</h2>
+          <h5 style="margin-left:20px">Average Rating: {{average_rating}}/10</h5>
+          <br>
+            {% for review in reviews %}
+              <div style="margin-left:20px; background-color:#212428; width:1180px; height:120px; border: 1px solid gray; border-radius:8px;">
+              {% if request.user == review.user %}
+              <form method='POST'>{% csrf_token %}
+              <button type="submit" style="float:right; margin:10px" name="moviepagereview,{{review.movie.title}},{{review.full_review}}" class="btn-close btn-close-white" aria-label="Close"></button>
+              </form>
+              {% endif %}
+              <h5 style="margin:10px; color:#ffffff"><strong>{{review.review_score}}-{{review.review_summary|capfirst}}</strong></h5>
+              <p style="margin:10px; color:#ffffff">{{review.full_review|capfirst}}</p>
+              <small style="float:right; color:#ffffff; margin-right:20px;">{{review.time}}</small>
+              <small style="margin:10px; color:#ffffff;">Review by: {% if request.user == review.user %}You{% else %}{{review.user.username|capfirst}}{% endif %}</small>
+              </div>
+              <hr style="margin:15px">
+            {% endfor %}
+        {% endif %}
+      </div>
     </div>
 </div>
 
