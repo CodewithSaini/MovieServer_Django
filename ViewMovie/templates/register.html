@@ -3,7 +3,8 @@
 
 {% endblock title %} {% block content %}
 
-<div class="container" style="display: flex; margin-top: 80px">
+<div class="container" style="margin-top: 80px">
+  {% include 'messages.html' %}
   <br />
   <form
     action="{% url 'register' %}"
@@ -45,7 +46,6 @@
         <br />
         <hr />
         <h6>Arleady have an account? <a href="{% url 'login' %}"> Login</a></h6>
-        <div>{{user_form.errors}}</div>
       </div>
     </div>
   </form>

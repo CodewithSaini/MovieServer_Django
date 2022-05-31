@@ -3,6 +3,7 @@
 {% endblock title %} {% block content %}
 
 <div class="container">
+  {% include 'messages.html' %}
   <h1>Movies</h1>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap">
     {% for movie in movies %}

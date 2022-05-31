@@ -2,8 +2,8 @@
 <title>Searched Movies</title>
 {% endblock title %} {% block content %}
 
-<div class="container">
-    <h1>Movies</h1>
+<div class="container" style="margin-top:80px">
+  {% include 'messages.html' %}
     <div style="display: flex; flex-direction: row; flex-wrap: wrap">
       {% for movie in movies %}
       <div class="card" style="width: 15rem; height:20rem; margin: 7px;">

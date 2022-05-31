@@ -3,6 +3,7 @@
 {% endblock title %} {% block content %}
 
 <div class="container" style="margin-top: 80px;">
+  {% include 'messages.html' %}
   <a type="button" class="btn btn-danger" name="delete_btn" href="{% url 'delete' movie.title %}" style="float:right; margin-left:10px">Delete</a>
   <a type="button" class="btn btn-success" name="update_btn" href="{% url 'update' movie.title %}" style="float:right">Edit</a>
   

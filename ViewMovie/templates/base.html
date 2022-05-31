@@ -104,6 +104,7 @@
               id="search_form"
               style="margin-right: 10px"
               method="POST"
+              action="{% url 'home' %}"
             >
               {% csrf_token %}
               <input
@@ -170,6 +171,7 @@
         </div>
       </div>
     </nav>
+
     <div class="container">{% block content %} {% endblock content %}</div>
 
     <script
