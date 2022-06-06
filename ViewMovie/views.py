@@ -1,5 +1,6 @@
 from collections import namedtuple
 import datetime
+from django.db.models import Q
 from itertools import chain
 from operator import attrgetter
 from django.utils import timezone
@@ -24,9 +25,10 @@ from .helper_function import get_event_date
 def search_movie(title):
     if len(title) > 0:
         print(len(title))
-        if Movie.objects.filter(title__contains=title):
-            mov = Movie.objects.filter(title__contains=title)
-            return mov
+        movies = Movie.objects.filter(Q(title__icontains=title) | Q(actors__icontains=title) | Q(
+            directors__icontains=title) | Q(writers__icontains=title) | Q(genre__icontains=title) | Q(released__icontains=title))
+        if movies.count() > 0:
+            return movies
         else:
             return 'no movie'
     else:
@@ -101,7 +103,7 @@ def log_user_out(request):
 
 
 def top_50_movies(request):
-    
+
     content = Movie.objects.all().order_by("-collection")[:50]
     paginator = Paginator(content, 25)  # Show 25 contacts per page.
     print(content.count())
@@ -163,12 +165,22 @@ def movie_page(request, title):
     m_writers = movie.writers.split(", ")
     actor = movie.actors.split(", ")
     m_directors = movie.directors.split(", ")
+    if len(movie.genre) >= 3:
+        similar_movies = Movie.objects.filter(
+            Q(Q(genre__icontains=movie.genre[0]) & Q(genre__icontains=movie.genre[1])) |
+            Q(Q(genre__icontains=movie.genre[1]) & Q(genre__icontains=movie.genre[2])) |
+            Q(Q(genre__icontains=movie.genre[0]) & Q(genre__icontains=movie.genre[2])))
+        print(similar_movies)
+    else:
+        similar_movies = Movie.objects.filter(
+            Q(Q(genre__icontains=movie.genre[0]) & Q(genre__icontains=movie.genre[1])))
+        print(similar_movies)
 #############################add to watchlist ###################################################
     if request.user.is_authenticated:
         already_in_watchlist = WatchList.objects.all().filter(
             user=request.user, movie=movie)
         user_watchlist = WatchList.objects.all().filter(user=request.user)
-        print(user_watchlist.count())
+        # print(user_watchlist.count())
         if not already_in_watchlist:
             in_watchlist = False
             if user_watchlist.count() < 5 and request.method == 'POST' and "add_to_watchlist" in request.POST:
@@ -210,7 +222,7 @@ def movie_page(request, title):
     elif not request.user.is_authenticated and "add_to_watchlist" in request.POST:
         return render(request, 'loginrequired.html', {})
 
-    return render(request, 'moviepage.html', {"directors": m_directors, "average_rating": average_rating, "writers": m_writers, "hour": run_hour, "min": run_min, "movie": movie, 'actors': actor, 'reviews': reviews, 'in_watchlist': in_watchlist})
+    return render(request, 'moviepage.html', {"directors": m_directors, "average_rating": average_rating, "writers": m_writers, "hour": run_hour, "similar_movies": similar_movies[:6], "min": run_min, "movie": movie, 'actors': actor, 'reviews': reviews, 'in_watchlist': in_watchlist})
 
 
 def add_movie(request):
