@@ -55,9 +55,9 @@ def home_page(request):
         today_date = datetime.date.today()
         future_date = today_date + timedelta(days=30)
         past_date = today_date - timedelta(days=60)
-        featured_movie = Movie.objects.filter(
-            released__range=(past_date, future_date))
-        return render(request, 'home.html', {'navbar': 'home', 'feature_movie': featured_movie, 'home': "home"})
+        featured_movie = Movie.objects.all()
+        recent_add = Movie.objects.all().order_by("-time")[:5]
+        return render(request, 'home.html', {'navbar': 'home', "recent_movies": recent_add, 'feature_movie': featured_movie, 'home': "home"})
 
 
 def movies(request):

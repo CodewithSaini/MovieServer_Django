@@ -1,9 +1,60 @@
-{% extends 'base.html' %} {% block title %}
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}
 <title>Home</title>
 {% endblock title %} {% block content %}
-<div class="container" style="margin-top: 80px">
+<div class="container" style="margin-top: 80px; text-align:center">
   {% include 'messages.html' %}
-  <h3>Feature Movie Today</h3>
+  <h2>Feature Movie Today</h2>
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      {% for movies in feature_movie %}
+        <div class="swiper-slide">
+          <a href="{% url 'one_movie' movies.title %}">
+          <img style="width:300px; height:450px;" alt="{{movies.title}}" src="{{movies.poster}}"></img>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+    <br>
+    <br>
+  </div>
+  <br>
+  <h3 style="float:center">Recently Added Movies</h3>
+  <div class="col-13" style=" display: flex; flex-direction: row; flex-wrap: wrap; height:400px; border: 1px solid gray; border-radius:8px; background-color: #ffffff">
+    {% for movie_s in recent_movies %}
+        <a href="{% url 'one_movie' movie_s.title %}"
+          ><img
+            src="{{ movie_s.poster }}"
+            style="width: 236px; height: 377px; border-radius:6px; margin-top:10px; margin-bottom:10px; margin-left:14px"
+            alt="{{movie_s.title}}"
+        /></a>
+    {% endfor %}
+  </div>
+  <br>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+    var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 4,
+      spaceBetween: 20,
+      slidesPerGroup: 1,
+      loop: true,
+      loopFillGroupWithBlank: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+    var but = document.querySelector("[class='swiper-button-next']");
+    setInterval(function () {but.click();},3000);
+  </script>
 </div>
 
 {% endblock content %}
